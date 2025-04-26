@@ -1,5 +1,5 @@
 """
-WSGI config for NotesSharingProject project.
+WSGI config for vitstudymatesproject project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
