@@ -62,8 +62,12 @@ WSGI_APPLICATION = 'vitstudymatesproject.wsgi.application'
 import dj_database_url
 
 DATABASES = {
-    'default': dj_database_url.config(default=os.getenv('postgresql://vitstudymates_user:4JkyHwptgd26N093mrAxOoEDsupRVlQd@dpg-d06i8fk9c44c73fiv440-a/vitstudymates'))
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
 }
+
 
 
 # Password validation
