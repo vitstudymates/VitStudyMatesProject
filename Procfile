@@ -1,1 +1,1 @@
-gunicorn vitstudymatesproject.wsgi
+web: gunicorn vitstudymatesproject.wsgi
