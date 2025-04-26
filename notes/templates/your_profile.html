@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Profile - VITStudyMates</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    body {
+      background-color: #ffffff;
+      color: #2a2a3a;
+      min-height: 100vh;
+    }
+    header {
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(224, 224, 224, 0.5);
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        .back-btn {
+            background: #FF5757;
+            box-shadow: 0 4px 12px rgba(255, 87, 87, 0.2);
+        }
+
+        .back-btn:hover {
+            background: #ff3c3c;
+            box-shadow: 0 6px 15px rgba(255, 87, 87, 0.3);
+        }
+
+    .header-btn {
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+
+    .logo-text {
+      font-weight: 700;
+      font-size: 28px;
+    }
+
+    .logo-text a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .logo-text span:first-child {
+      color: #574DB8;
+    }
+
+    .logo-text span:last-child {
+      color: #FF5757;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .profile-wrapper {
+      background: white;
+      padding: 2rem 1rem;
+      border-radius: 15px;
+    }
+
+    .page-header {
+      text-align: center;
+      color: #574DB8;
+      margin-bottom: 2rem;
+      font-size: 1.8rem;
+      font-weight: 600;
+    }
+
+    .profile-container {
+      border-radius: 15px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+      background: white;
+      max-width: 1000px;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+
+    .profile-header {
+      background: linear-gradient(135deg, #574DB8 0%, #8075E5 100%);
+      color: white;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .profile-content {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .profile-sidebar {
+      flex: 1;
+      min-width: 250px;
+      background: #f9f5ff;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border-right: 1px solid #ede7f6;
+    }
+
+    .profile-large-photo {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      overflow: hidden;
+      background: white;
+      border: 5px solid white;
+      box-shadow: 0 5px 15px rgba(87, 77, 184, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .profile-large-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .profile-main {
+      flex: 2;
+      padding: 2rem;
+      background: white;
+    }
+
+    .info-card {
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .info-label {
+      color: #666;
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .info-value {
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 0.8rem 1.5rem;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: none;
+      transition: 0.3s ease;
+    }
+
+    .btn-profile {
+      min-width: 160px;
+      justify-content: center;
+    }
+
+    .btn-edit {
+      background: #574DB8;
+      color: white;
+    }
+
+    .btn-edit:hover {
+      background: #4a41a0;
+      transform: translateY(-3px);
+    }
+
+
+
+    .footer-tagline {
+      font-size: 18px;
+      font-weight: 500;
+    }
+
+    .vit-text {
+      font-weight: 700;
+    }
+
+    .tagline-text {
+      color: #e0e0e0;
+    }
+
+    @media (max-width: 768px) {
+      .profile-content {
+        flex-direction: column;
+      }
+
+      .profile-sidebar {
+        border-right: none;
+        border-bottom: 1px solid #ede7f6;
+        width: 100%;
+        padding: 1.5rem;
+      }
+
+      .action-buttons {
+        flex-direction: column;
+      }
+
+      .btn-profile {
+        width: 100%;
+      }
+
+      .page-header {
+        font-size: 1.4rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="logo">
+        <div class="logo-text">
+            <a href="{% url 'index' %}">
+                <span>VIT</span><span>StudyMates</span>
+            </a>
+        </div>
+    </div>
+    
+    <div class="profile-section">
+   
+        
+        
+        <div class="action-buttons">
+          
+            
+            <a href="{% url 'profile' %}" class="header-btn back-btn">
+                <i class="fas fa-arrow-left"></i>
+             Go Back
+            </a>
+        </div>
+    </div>
+</header>
+  
+  <div class="container">
+    <div class="profile-wrapper">
+      
+
+      <div class="profile-container">
+        <div class="profile-header">
+          <h2>Account Details</h2>
+        </div>
+
+        <div class="profile-content">
+          <!-- Sidebar -->
+          <div class="profile-sidebar">
+            <div class="profile-large-photo">
+              {% if data.photo %}
+                <img src="{{ data.photo.url }}" alt="Profile Photo" />
+              {% else %}
+                <span style="font-size: 40px;">👤</span>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Main Content -->
+          <div class="profile-main">
+            <div class="info-card">
+              <div class="info-label">Full Name</div>
+              <div class="info-value">{{ user.first_name }} {{ user.last_name }}</div>
+            </div>
+
+            <div class="info-card">
+              <div class="info-label">Email Address</div>
+              <div class="info-value">{{ user.email }}</div>
+            </div>
+
+            <div class="info-card">
+              <div class="info-label">Phone Number</div>
+              <div class="info-value">{{ data.contact }}</div>
+            </div>
+
+            <div class="info-card">
+              <div class="info-label">
+                <i class="fas fa-graduation-cap"></i> Academic Information - Branch
+              </div>
+              <div class="info-value">{{ data.branch }}</div>
+            </div>
+
+            <div class="action-buttons">
+              <a href="{% url 'edit_profile' %}" class="btn btn-profile btn-edit">
+                <i class="fas fa-edit"></i> Edit Profile
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="minimalist-footer">
+    <div class="footer-content">
+        <p class="footer-tagline"><span class="vit-text">VITStudyMates</span> - <span class="tagline-text">Everything a VITian Needs</span></p>
+    </div>
+</footer>
+
+<style>
+.minimalist-footer {
+    background: linear-gradient(135deg, #574DB8 0%, #574DB8 100%);
+    color: white;
+    padding: 30px 0;
+    margin-top: 60px;
+    text-align: center;
+    border-radius: 20px 20px 0 0;
+    box-shadow: 0 -10px 30px #574DB8(87, 77, 184, 0.1);
+    position: relative;
+}
+
+.minimalist-footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, #574DB8, #FF5757);
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.footer-tagline {
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+.vit-text {
+    color: #FF5757;
+    font-weight: 700;
+}
+
+.tagline-text {
+    color: #e0e0e0;
+}
+
+@media (max-width: 768px) {
+    .footer-tagline {
+        font-size: 16px;
+    }
+}
+</style>
+
+
+
+
+
+
+
+
+</body>
+</html>

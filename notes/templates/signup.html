@@ -1,0 +1,818 @@
+{% load static %}
+{% block body %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Registration - VITStudyMates</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: #ffffff;
+            color: #2a2a3a;
+            min-height: 100vh;
+        }
+        
+        header {
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(224, 224, 224, 0.5);
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .logo-text {
+            font-weight: 700;
+            font-size: 28px;
+        }
+
+        .logo-text a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .logo-text span:first-child {
+            color: #574DB8;
+        }
+
+        .logo-text span:last-child {
+            color: #FF5757;
+        }
+        
+        .header-btn {
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .back-btn {
+            background: #FF5757;
+            box-shadow: 0 4px 12px rgba(255, 87, 87, 0.2);
+        }
+
+        .back-btn:hover {
+            background: #ff3c3c;
+            box-shadow: 0 6px 15px rgba(255, 87, 87, 0.3);
+        }
+
+        .header-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Registration styles */
+        :root {
+            --primary: #8075E5;
+            --secondary: #8075E5;
+            --accent: #ff5757;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4cc9f0;
+            --border-radius: 12px;
+            --box-shadow: 0 10px 30px rgba(67, 97, 238, 0.15);
+            --transition: all 0.3s ease;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-12px);
+            }
+            100% {
+                transform: translateY(0px);
+            }
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
+        .registration-container {
+            max-width: 1100px;
+            width: 100%;
+            margin: 30px auto;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            animation: fadeInUp 0.8s ease-out;
+            position: relative;
+            flex: 1;
+        }
+        
+        .registration-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 50px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .registration-header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 2;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        
+        .registration-header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 2;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .header-shapes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            opacity: 0.15;
+        }
+        
+        .header-shape {
+            position: absolute;
+            border-radius: 50%;
+            background: white;
+        }
+        
+        .shape-1 {
+            width: 150px;
+            height: 150px;
+            top: -40px;
+            left: 10%;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .shape-2 {
+            width: 100px;
+            height: 100px;
+            bottom: 20%;
+            right: 20%;
+            animation: float 8s ease-in-out infinite;
+        }
+        
+        .shape-3 {
+            width: 70px;
+            height: 70px;
+            top: 40%;
+            right: 10%;
+            animation: float 7s ease-in-out infinite;
+        }
+        
+        .shape-4 {
+            width: 40px;
+            height: 40px;
+            bottom: 30%;
+            left: 20%;
+            animation: float 5s ease-in-out infinite;
+        }
+        
+        .registration-body {
+            padding: 50px 40px;
+        }
+        
+        .registration-columns {
+            display: flex;
+            gap: 50px;
+        }
+        
+        .login-promo {
+            flex: 1;
+            padding: 40px 30px;
+            background: #f8f9ff;
+            border-radius: var(--border-radius);
+            animation: fadeInUp 0.8s 0.2s both;
+            border: 1px solid rgba(67, 97, 238, 0.1);
+            box-shadow: 0 5px 20px rgba(67, 97, 238, 0.05);
+        }
+        
+        .login-promo h2 {
+            color: var(--primary);
+            margin-bottom: 25px;
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+        
+        .login-promo p {
+            font-size: 1.1rem;
+            color: var(--dark);
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .benefits-list {
+            padding-left: 10px;
+            margin-bottom: 35px;
+            list-style: none;
+        }
+        
+        .benefits-list li {
+            margin-bottom: 15px;
+            position: relative;
+            padding-left: 35px;
+            font-size: 1.1rem;
+            color: #4a5568;
+        }
+        
+        .benefits-list li:before {
+            content: "✓";
+            color: var(--accent);
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+            background: rgba(255, 87, 87, 0.1);
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+        
+        .illustration {
+            text-align: center;
+            margin: 35px 0;
+            animation: float 5s ease-in-out infinite;
+        }
+        
+        .illustration img {
+            max-width: 200px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(67, 97, 238, 0.2);
+        }
+        
+        .registration-form {
+            flex: 1.2;
+            animation: fadeInUp 0.8s 0.4s both;
+        }
+        
+        .registration-form h2 {
+            color: var(--primary);
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 600;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        .registration-form h2:after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+            flex: 1;
+            transition: var(--transition);
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: #4a5568;
+            font-size: 1rem;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 15px 20px;
+            border: 1px solid #e2e8f0;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+            background-color: #f8f9fa;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+            outline: none;
+            background-color: white;
+        }
+        
+        .form-control::placeholder {
+            color: #a0aec0;
+        }
+        
+        .photo-upload-container {
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        .photo-upload-preview {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: #f8f9fa;
+            border: 2px dashed #e2e8f0;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .photo-upload-preview:hover {
+            border-color: var(--primary);
+            transform: scale(1.02);
+        }
+        
+        .photo-upload-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+        
+        .photo-upload-preview .placeholder-icon {
+            font-size: 2.5rem;
+            color: #a0aec0;
+        }
+        
+        .photo-upload-label {
+            text-align: center;
+            display: block;
+            font-weight: 500;
+            color: var(--primary);
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        
+        .photo-upload-help {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #718096;
+            margin-top: 5px;
+        }
+        
+        .photo-upload-input {
+            position: absolute;
+            width: 0.1px;
+            height: 0.1px;
+            opacity: 0;
+            overflow: hidden;
+            z-index: -1;
+        }
+        
+        .btn {
+            border: none;
+            padding: 16px 30px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+            text-align: center;
+            display: block;
+            text-decoration: none;
+        }
+        
+        .btn-register {
+            background: var(--accent);
+            color: white;
+            box-shadow: 0 5px 15px rgba(255, 87, 87, 0.3);
+            margin-top: 20px;
+        }
+        
+        .btn-register:hover {
+            background: #ff4141;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 87, 87, 0.4);
+        }
+        
+        .btn-login {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+            margin-top: 20px;
+        }
+        
+        .btn-login:hover {
+            background: var(--secondary);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(67, 97, 238, 0.4);
+        }
+        
+        .form-note {
+            text-align: center;
+            margin-top: 25px;
+            color: #718096;
+            font-size: 0.95rem;
+        }
+        
+        .form-note a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .form-note a:hover {
+            text-decoration: underline;
+        }
+        
+        .social-logins {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+        }
+        
+        .social-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8f9fa;
+            border: 1px solid #e2e8f0;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        
+        .social-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        @media (max-width: 992px) {
+            .registration-columns {
+                flex-direction: column;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .registration-header {
+                padding: 40px 25px;
+            }
+            
+            .registration-body {
+                padding: 40px 25px;
+            }
+            
+            .registration-header h1 {
+                font-size: 2.3rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .registration-header h1 {
+                font-size: 2rem;
+            }
+            
+            .registration-header p {
+                font-size: 1rem;
+            }
+            
+            .login-promo, .registration-form {
+                padding: 25px 20px;
+            }
+            
+            .btn {
+                padding: 14px 25px;
+            }
+        }
+        
+        /* Footer styles */
+        .minimalist-footer {
+            background: linear-gradient(135deg, #574DB8 0%, #574DB8 100%);
+            color: white;
+            padding: 30px 0;
+            margin-top: 60px;
+            text-align: center;
+            border-radius: 20px 20px 0 0;
+            box-shadow: 0 -10px 30px #574DB8(87, 77, 184, 0.1);
+            position: relative;
+        }
+
+        .minimalist-footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #574DB8, #FF5757);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .footer-tagline {
+            font-size: 18px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .vit-text {
+            color: #FF5757;
+            font-weight: 700;
+        }
+
+        .tagline-text {
+            color: #e0e0e0;
+        }
+
+        @media (max-width: 768px) {
+            .footer-tagline {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <div class="logo-text">
+                <a href="{% url 'index' %}">
+                    <span>VIT</span><span>StudyMates</span>
+                </a>
+            </div>
+        </div>
+        
+        <div class="profile-section">
+            <div class="action-buttons">
+                <a href="{% url 'index' %}" class="header-btn back-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    Go Back
+                </a>
+            </div>
+        </div>
+    </header>
+    
+    <div class="registration-container">
+        <div class="registration-header">
+            <div class="header-shapes">
+                <div class="header-shape shape-1"></div>
+                <div class="header-shape shape-2"></div>
+                <div class="header-shape shape-3"></div>
+                <div class="header-shape shape-4"></div>
+            </div>
+            <h1>Create Your Account</h1>
+            <p>Join our platform to access study materials, resources, and much more</p>
+        </div>
+        
+        <div class="registration-body">
+            <div class="registration-columns">
+                <div class="login-promo">
+                    <h2>Already a Member?</h2>
+                    <p>Sign in to access your personalized dashboard with these benefits:</p>
+                    <ul class="benefits-list">
+                        <li>Access to all study materials</li>
+                        <li>Download lecture notes</li>
+                        <li>View previous year papers</li>
+                        <li>Get placement resources</li>
+                        <li>Track your academic progress</li>
+                    </ul>
+                    
+                    <a href="{% url 'login' %}" class="btn btn-login">Sign In Now</a>
+                </div>
+                
+                <div class="registration-form">
+                    <h2>Registration</h2>
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="photo-upload-container">
+                            <div class="photo-upload-preview" id="photoPreview">
+                                <span class="placeholder-icon">📷</span>
+                                <img id="previewImage" src="#" alt="Preview">
+                            </div>
+                            <label for="photo" class="photo-upload-label">Upload Profile Photo</label>
+                            <input type="file" id="photo" name="photo" class="photo-upload-input" accept="image/*">
+                            <p class="photo-upload-help">JPEG or PNG, max 2MB</p>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="fname">First Name</label>
+                                <input type="text" id="fname" class="form-control" placeholder="Enter First Name" name="fname" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="lname">Last Name</label>
+                                <input type="text" id="lname" class="form-control" placeholder="Enter Last Name" name="lname" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="con">Contact Number</label>
+                            <input type="tel" id="con" class="form-control" placeholder="+91 0000000000" name="con" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="emailid">Email Address</label>
+                            <input type="email" id="emailid" class="form-control" placeholder="Enter Email ID" name="emailid" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="pwd">Password</label>
+                            <input type="password" id="pwd" class="form-control" placeholder="Enter Password" name="pwd" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="branch">Branch</label>
+                            <select id="branch" class="form-control" name="branch" required>
+                                <option value="">-- Select Your Branch --</option>
+                                <option value="CSE">Computer Science and Engineering (CSE)</option>
+                                <option value="CSE - AI & ML">CSE - Artificial Intelligence & Machine Learning</option>
+                                <option value="CSE - Cyber Security">CSE - Cyber Security & Digital Forensics</option>
+                                <option value="CSE - Data Science">CSE - Data Science</option>
+                                <option value="CSE - IoT">CSE - Internet of Things</option>
+                                <option value="ECE">Electronics and Communication Engineering (ECE)</option>
+                                <option value="EEE">Electrical and Electronics Engineering (EEE)</option>
+                                <option value="Mechanical">Mechanical Engineering</option>
+                                <option value="Bioengineering">Bioengineering</option>
+                                <option value="Aerospace">Aerospace Engineering</option>
+                                <option value="Civil">Civil Engineering</option>
+                                <option value="Chemical">Chemical Engineering</option>
+                                <option value="Robotics">Robotics and Automation</option>
+                                <option value="Gaming Technology">Gaming Technology</option>
+                                <option value="Business Systems">CSE - Business Systems</option>
+                            </select>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-register">Create Account</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="minimalist-footer">
+        <div class="footer-content">
+            <p class="footer-tagline"><span class="vit-text">VITStudyMates</span> - <span class="tagline-text">Everything a VITian Needs</span></p>
+        </div>
+    </footer>
+
+    {% if error == "no" %}
+    <script>
+        alert('SignUp Successfully');
+        window.location.href = "{% url 'login' %}";
+    </script>
+    {% endif %}
+
+    {% if error == "yes" %}
+    <script>
+        alert('Something Went Wrong, Try Again');
+    </script>
+    {% endif %}
+
+    <script>
+        // Add animation to form elements on focus
+        document.querySelectorAll('.form-control').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'scale(1.02)';
+                this.style.backgroundColor = '#ffffff';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'scale(1)';
+                if (!this.value) {
+                    this.style.backgroundColor = '#f8f9fa';
+                }
+            });
+        });
+        
+        // Form validation enhancement
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const password = document.getElementById('pwd');
+            if (password.value.length < 6) {
+                e.preventDefault();
+                alert('Password must be at least 6 characters long');
+                password.focus();
+            }
+        });
+        
+        // Photo upload preview functionality
+        const photoInput = document.getElementById('photo');
+        const photoPreview = document.getElementById('photoPreview');
+        const previewImage = document.getElementById('previewImage');
+        const placeholderIcon = photoPreview.querySelector('.placeholder-icon');
+        
+        photoPreview.addEventListener('click', function() {
+            photoInput.click();
+        });
+        
+        photoInput.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                const file = this.files[0];
+                
+                // Check file size (max 2MB)
+                if (file.size > 2 * 1024 * 1024) {
+                    alert('Please select an image less than 2MB in size');
+                    this.value = '';
+                    return;
+                }
+                
+                // Check file type
+                if (!file.type.match('image.*')) {
+                    alert('Please select an image file (JPEG or PNG)');
+                    this.value = '';
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImage.src = e.target.result;
+                    previewImage.style.display = 'block';
+                    placeholderIcon.style.display = 'none';
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+</body>
+</html>
+{% endblock %}

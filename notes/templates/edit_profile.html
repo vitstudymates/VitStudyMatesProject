@@ -1,0 +1,591 @@
+{% load static %}
+{% block body %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #8075E5;
+            --secondary: #8075E5;
+            --accent: #ff5757;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4cc9f0;
+            --border-radius: 12px;
+            --box-shadow: 0 10px 30px rgba(67, 97, 238, 0.15);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+        }
+
+        /* Improved Header Styles */
+        header {
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+       
+        .logo-text {
+            font-weight: 700;
+            font-size: 28px;
+        }
+
+        .logo-text a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .logo-text span:first-child {
+            color: #574DB8;
+        }
+
+        .logo-text span:last-child {
+            color: #FF5757;
+        }
+
+        .header-btn {
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-btn {
+            background: #FF5757;
+            box-shadow: 0 4px 12px rgba(255, 87, 87, 0.2);
+        }
+
+        .back-btn:hover {
+            background: #ff3c3c;
+            box-shadow: 0 6px 15px rgba(255, 87, 87, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px 15px;
+        }
+        
+        .edit-profile-container {
+            max-width: 800px;
+            width: 100%;
+            margin: 20px auto;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+        }
+        
+        .edit-profile-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 30px 40px;
+            text-align: center;
+        }
+        
+        .edit-profile-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .edit-profile-body {
+            padding: 40px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: #4a5568;
+            font-size: 1rem;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 15px 20px;
+            border: 1px solid #e2e8f0;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+            background-color: #f8f9fa;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+            outline: none;
+            background-color: white;
+        }
+        
+        .photo-upload-container {
+            margin-bottom: 30px;
+        }
+        
+        .photo-upload-preview {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: #f8f9fa;
+            border: 2px solid #e2e8f0;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .photo-upload-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .photo-upload-preview .placeholder-icon {
+            font-size: 2.5rem;
+            color: #a0aec0;
+        }
+        
+        .photo-upload-label {
+            display: block;
+            text-align: center;
+            color: var(--primary);
+            font-weight: 500;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+        
+        .photo-upload-help {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #718096;
+        }
+        
+        .btn {
+            border: none;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-block;
+            text-decoration: none;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+        }
+        
+        .btn-primary:hover {
+            background: var(--secondary);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(67, 97, 238, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #edf2f7;
+            color: #4a5568;
+            margin-left: 10px;
+        }
+        
+        .btn-secondary:hover {
+            background: #e2e8f0;
+            transform: translateY(-3px);
+        }
+        
+        .buttons-group {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        /* Popup Alert Styles */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .popup-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .popup-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+        
+        .popup-icon.success {
+            color: #10B981;
+        }
+        
+        .popup-icon.error {
+            color: #EF4444;
+        }
+        
+        .popup-message {
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+            color: #333;
+        }
+        
+        .popup-button {
+            background: var(--primary);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+        
+        .popup-button:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+        
+        /* Error Messages */
+        .form-error {
+            color: #EF4444;
+            font-size: 0.875rem;
+            margin-top: 5px;
+        }
+
+        /* Improved Footer Styles */
+        .minimalist-footer {
+    background: linear-gradient(135deg, #574DB8 0%, #574DB8 100%);
+    color: white;
+    padding: 30px 0;
+    margin-top: 60px;
+    text-align: center;
+    border-radius: 20px 20px 0 0;
+    box-shadow: 0 -10px 30px #574DB8(87, 77, 184, 0.1);
+    position: relative;
+}
+
+.minimalist-footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, #574DB8, #FF5757);
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.footer-tagline {
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+.vit-text {
+    color: #FF5757;
+    font-weight: 700;
+}
+
+.tagline-text {
+    color: #e0e0e0;
+}
+
+@media (max-width: 768px) {
+    .footer-tagline {
+        font-size: 16px;
+    }
+}
+
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 20px;
+            }
+            
+            .logo-text {
+                font-size: 24px;
+            }
+            
+            .header-btn {
+                padding: 8px 15px;
+                font-size: 13px;
+            }
+            
+            .edit-profile-header h1 {
+                font-size: 2rem;
+            }
+            
+            .edit-profile-body {
+                padding: 30px 20px;
+            }
+            
+            .footer-tagline {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <div class="logo-text">
+                <a href="{% url 'index' %}">
+                    <span>VIT</span><span>StudyMates</span>
+                </a>
+            </div>
+        </div>
+        
+        <div class="profile-section">
+            <div class="action-buttons">
+          
+            
+                <a href="{% url 'profile' %}" class="header-btn back-btn">
+                    <i class="fas fa-arrow-left"></i>
+                 Go Back
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-content">
+        <div class="edit-profile-container">
+            <div class="edit-profile-header">
+                <h1>Edit Profile</h1>
+            </div>
+            
+            <div class="edit-profile-body">
+                <form method="post" enctype="multipart/form-data" id="editProfileForm">
+                    {% csrf_token %}
+                    
+                    <div class="photo-upload-container">
+                        <div class="photo-upload-preview" id="photoPreview">
+                            {% if data.photo %}
+                                <img src="{{ data.photo.url }}" alt="Profile Photo" id="previewImage">
+                            {% else %}
+                                <span class="placeholder-icon">📷</span>
+                                <img id="previewImage" src="#" alt="Preview" style="display: none;">
+                            {% endif %}
+                        </div>
+                        <label for="photo" class="photo-upload-label">Change Profile Photo</label>
+                        <input type="file" id="photo" name="photo" accept="image/*" style="display: none;" onchange="previewPhoto(this)">
+                        <p class="photo-upload-help">JPEG or PNG, max 2MB</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="fname">First Name</label>
+                        <input type="text" id="fname" name="fname" class="form-control" value="{{ user.first_name }}" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="lname">Last Name</label>
+                        <input type="text" id="lname" name="lname" class="form-control" value="{{ user.last_name }}" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contact">Contact Number</label>
+                        <input type="tel" id="contact" name="contact" class="form-control" value="{{ data.contact }}" pattern="[0-9]{10}" title="Please enter a valid 10-digit phone number" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="branch">Branch</label>
+                        <select id="branch" name="branch" class="form-control" required>
+                            <option value="">-- Select Your Branch --</option>
+                            <option value="CSE" {% if data.branch == "CSE" %}selected{% endif %}>Computer Science and Engineering (CSE)</option>
+                            <option value="CSE - AI & ML" {% if data.branch == "CSE - AI & ML" %}selected{% endif %}>CSE - Artificial Intelligence & Machine Learning</option>
+                            <option value="CSE - Cyber Security" {% if data.branch == "CSE - Cyber Security" %}selected{% endif %}>CSE - Cyber Security & Digital Forensics</option>
+                            <option value="CSE - Data Science" {% if data.branch == "CSE - Data Science" %}selected{% endif %}>CSE - Data Science</option>
+                            <option value="CSE - IoT" {% if data.branch == "CSE - IoT" %}selected{% endif %}>CSE - Internet of Things</option>
+                            <option value="ECE" {% if data.branch == "ECE" %}selected{% endif %}>Electronics and Communication Engineering (ECE)</option>
+                            <option value="EEE" {% if data.branch == "EEE" %}selected{% endif %}>Electrical and Electronics Engineering (EEE)</option>
+                            <option value="Mechanical" {% if data.branch == "Mechanical" %}selected{% endif %}>Mechanical Engineering</option>
+                            <option value="Bioengineering" {% if data.branch == "Bioengineering" %}selected{% endif %}>Bioengineering</option>
+                            <option value="Aerospace" {% if data.branch == "Aerospace" %}selected{% endif %}>Aerospace Engineering</option>
+                            <option value="Civil" {% if data.branch == "Civil" %}selected{% endif %}>Civil Engineering</option>
+                            <option value="Chemical" {% if data.branch == "Chemical" %}selected{% endif %}>Chemical Engineering</option>
+                            <option value="Robotics" {% if data.branch == "Robotics" %}selected{% endif %}>Robotics and Automation</option>
+                            <option value="Gaming Technology" {% if data.branch == "Gaming Technology" %}selected{% endif %}>Gaming Technology</option>
+                            <option value="Business Systems" {% if data.branch == "Business Systems" %}selected{% endif %}>CSE - Business Systems</option>
+                        </select>
+                    </div>
+                    
+                    <div class="buttons-group">
+                        <button type="submit" class="btn btn-primary">Update Profile</button>
+                        <a href="{% url 'your_profile' %}" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+   
+  <footer class="minimalist-footer">
+    <div class="footer-content">
+        <p class="footer-tagline"><span class="vit-text">VITStudyMates</span> - <span class="tagline-text">Everything a VITian Needs</span></p>
+    </div>
+</footer>
+    
+    <!-- Popup Alert -->
+    <div class="popup-overlay" id="popupOverlay">
+        <div class="popup-content">
+            <div class="popup-icon" id="popupIcon"></div>
+            <div class="popup-message" id="popupMessage"></div>
+            <button class="popup-button" onclick="closePopup()">OK</button>
+        </div>
+    </div>
+    
+    <script>
+        function previewPhoto(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                
+                // Check file size (max 2MB)
+                if (file.size > 2 * 1024 * 1024) {
+                    showPopup('error', 'Please select an image less than 2MB in size');
+                    input.value = '';
+                    return;
+                }
+                
+                // Check file type
+                if (!file.type.match('image.*')) {
+                    showPopup('error', 'Please select an image file (JPEG or PNG)');
+                    input.value = '';
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const previewImage = document.getElementById('previewImage');
+                    previewImage.src = e.target.result;
+                    previewImage.style.display = 'block';
+                    
+                    // Hide placeholder icon if exists
+                    const placeholderIcon = document.querySelector('.placeholder-icon');
+                    if (placeholderIcon) {
+                        placeholderIcon.style.display = 'none';
+                    }
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+        
+        // Add click handler to photo preview
+        document.getElementById('photoPreview').addEventListener('click', function() {
+            document.getElementById('photo').click();
+        });
+        
+        // Popup functions
+        function showPopup(type, message) {
+            const overlay = document.getElementById('popupOverlay');
+            const icon = document.getElementById('popupIcon');
+            const messageElement = document.getElementById('popupMessage');
+            
+            if (type === 'success') {
+                icon.innerHTML = '✓';
+                icon.className = 'popup-icon success';
+            } else {
+                icon.innerHTML = '×';
+                icon.className = 'popup-icon error';
+            }
+            
+            messageElement.textContent = message;
+            overlay.style.display = 'flex';
+        }
+        
+        function closePopup() {
+            const overlay = document.getElementById('popupOverlay');
+            overlay.style.display = 'none';
+        }
+        
+        // Form validation
+        document.getElementById('editProfileForm').addEventListener('submit', function(e) {
+            const contact = document.getElementById('contact').value;
+            if (!/^\d{10}$/.test(contact)) {
+                e.preventDefault();
+                showPopup('error', 'Please enter a valid 10-digit phone number');
+                return false;
+            }
+        });
+    </script>
+    
+    {% if error == "no" %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            showPopup('success', 'Profile updated successfully!');
+            // Redirect after showing popup
+            setTimeout(function() {
+                window.location.href = "{% url 'your_profile' %}";
+            }, 2000);  // Wait 2 seconds before redirecting
+        });
+    </script>
+    {% elif error == "yes" %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            showPopup('error', 'Something went wrong. Please try again.');
+        });
+    </script>
+    {% endif %}
+</body>
+</html>
+{% endblock %}

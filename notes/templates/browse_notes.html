@@ -1,0 +1,844 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>{% block title %}Browse Notes{% endblock %} - VITStudyMates</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/css/bootstrap.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #2a2a3a;
+            min-height: 100vh;
+        }
+
+        header {
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(224, 224, 224, 0.5);
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .logo-text {
+            font-weight: 700;
+            font-size: 28px;
+        }
+
+        .logo-text a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .logo-text span:first-child {
+            color: #574DB8;
+        }
+
+        .logo-text span:last-child {
+            color: #FF5757;
+        }
+
+        .header-btn {
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-btn {
+            background: #FF5757;
+            box-shadow: 0 4px 12px rgba(255, 87, 87, 0.2);
+        }
+
+        .back-btn:hover {
+            background: #ff3c3c;
+            box-shadow: 0 6px 15px rgba(255, 87, 87, 0.3);
+        }
+
+        .header-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        :root {
+            --primary: #6c5ce7;
+            --primary-light: #8980f5;
+            --primary-dark: #5549c9;
+            --secondary: #2ecc71;
+            --warning: #FF5757;
+            --danger: #FF5757;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --text-dark: #2d3436;
+            --text-muted: #6c757d;
+            --border-color: #e0e0e0;
+            --shadow-sm: 0 2px 5px rgba(0,0,0,0.08);
+            --shadow-md: 0 4px 8px rgba(0,0,0,0.12);
+            --shadow-lg: 0 8px 16px rgba(0,0,0,0.15);
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+        }
+
+        /* Dashboard container */
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 25px;
+        }
+        
+        /* Header */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .page-title h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+        }
+        
+        .page-title h1 i {
+            margin-right: 10px;
+        }
+        
+        .page-title p {
+            margin-bottom: 0;
+            color: var(--text-muted);
+        }
+        
+        /* Buttons */
+        .btn-primary {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s ease;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            border-color: var(--primary-dark);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+        
+        /* Search and Filter Card */
+        .card {
+            border: none;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+        
+        .card-header-gradient {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 15px 20px;
+            border-bottom: none;
+        }
+        
+        .card-header-gradient h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .card-header-gradient h3 i {
+            margin-right: 10px;
+        }
+        
+        .card-body {
+            padding: 25px;
+        }
+        
+        .form-group label {
+            font-weight: 500;
+            font-size: 14px;
+            margin-bottom: 6px;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+        }
+        
+        .form-group label i {
+            margin-right: 6px;
+            color: var(--primary);
+        }
+        
+        .form-control {
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 9px 15px;
+            font-size: 15px;
+            box-shadow: none;
+            transition: all 0.2s ease;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 0.2rem rgba(108, 92, 231, 0.15);
+        }
+        
+        /* Notes Grid */
+        .notes-container {
+            margin-bottom: 40px;
+        }
+        
+        .note-card {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            background-color: white;
+            transition: all 0.3s ease;
+            margin-bottom: 0;
+            overflow: hidden;
+        }
+        
+        .note-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .note-card-header {
+            padding: 18px;
+            background-color: rgba(108, 92, 231, 0.05);
+            display: flex;
+            align-items: center;
+        }
+        
+        .note-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .note-details {
+            overflow: hidden;
+        }
+        
+        .note-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin: 0 0 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .note-meta {
+            display: flex;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        
+        .note-meta span {
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .note-meta i {
+            margin-right: 4px;
+        }
+        
+        .note-card-body {
+            padding: 16px 18px;
+            flex-grow: 1;
+        }
+        
+        .note-course {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: var(--primary);
+        }
+        
+        .note-description {
+            font-size: 14px;
+            line-height: 1.5;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .note-author {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 0;
+        }
+        
+        .note-card-footer {
+            padding: 12px 18px;
+            background-color: rgba(108, 92, 231, 0.05);
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .btn-download, .btn-preview {
+            padding: 8px 12px;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: var(--radius-sm);
+            flex: 1;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-download {
+            background-color: var(--secondary);
+            color: white;
+            margin-right: 8px;
+        }
+        
+        .btn-download:hover {
+            background-color: #27ae60;
+            color: white;
+            text-decoration: none;
+            transform: translateY(-2px);
+        }
+        
+        .btn-preview {
+            background-color: var(--warning);
+            color: white;
+            margin-left: 8px;
+        }
+        
+        .btn-preview:hover {
+            background-color: #FF5757;
+            color: white;
+            text-decoration: none;
+            transform: translateY(-2px);
+        }
+        
+        /* Pagination */
+        .pagination-container {
+            margin-top: 35px;
+        }
+        
+        .pagination {
+            justify-content: center;
+        }
+        
+        .pagination .page-link {
+            color: var(--primary);
+            border-color: var(--border-color);
+            font-weight: 500;
+            padding: 8px 16px;
+        }
+        
+        .pagination .page-item.active .page-link {
+            background-color: var(--primary);
+            border-color: var(--primary);
+        }
+        
+        /* Modal */
+        .modal-content {
+            border: none;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+        
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border-bottom: none;
+            padding: 15px 20px;
+        }
+        
+        .modal-header .close {
+            color: white;
+            text-shadow: none;
+            opacity: 0.8;
+        }
+        
+        .modal-header .close:hover {
+            opacity: 1;
+        }
+        
+        .modal-title {
+            font-weight: 600;
+        }
+        
+        .modal-body {
+            padding: 25px;
+        }
+        
+        .note-preview-details {
+            margin-bottom: 20px;
+        }
+        
+        .note-preview-details p {
+            margin-bottom: 8px;
+        }
+        
+        .note-preview-details hr {
+            margin: 20px 0;
+            border-color: var(--border-color);
+        }
+        
+        .pdf-preview, .preview-unavailable {
+            margin-top: 25px;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+        }
+        
+        .preview-unavailable {
+            background-color: var(--light);
+            padding: 40px 20px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+        
+        .preview-unavailable i {
+            font-size: 48px;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+        }
+        
+        /* No notes found */
+        .no-notes-found {
+            background-color: white;
+            border-radius: var(--radius-md);
+            padding: 50px 30px;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .no-notes-found i {
+            font-size: 64px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+        
+        .no-notes-found h3 {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-dark);
+        }
+        
+        .no-notes-found .lead {
+            color: var(--text-muted);
+            margin-bottom: 25px;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 991px) {
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .dashboard-header > div:last-child {
+                margin-top: 15px;
+                width: 100%;
+            }
+            
+            .dashboard-header > div:last-child a {
+                display: block;
+                width: 100%;
+                text-align: center;
+            }
+        }
+        
+        @media (max-width: 767px) {
+            .note-card-footer {
+                flex-direction: column;
+            }
+            
+            .btn-download, .btn-preview {
+                margin: 5px 0;
+                width: 100%;
+            }
+            
+            .btn-download {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+            
+            .btn-preview {
+                margin-left: 0;
+            }
+        }
+
+
+
+        /* Footer styles */
+        .minimalist-footer {
+            background: linear-gradient(135deg, #574DB8 0%, #574DB8 100%);
+            color: white;
+            padding: 30px 0;
+            margin-top: 60px;
+            text-align: center;
+            border-radius: 20px 20px 0 0;
+            box-shadow: 0 -10px 30px #574DB8(87, 77, 184, 0.1);
+            position: relative;
+        }
+
+        .minimalist-footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #574DB8, #FF5757);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .footer-tagline {
+            font-size: 18px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .vit-text {
+            color: #FF5757;
+            font-weight: 700;
+        }
+
+        .tagline-text {
+            color: #e0e0e0;
+        }
+
+        @media (max-width: 768px) {
+            .footer-tagline {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <div class="logo-text">
+                <a href="{% url 'index' %}">
+                    <span>VIT</span><span>StudyMates</span>
+                </a>
+            </div>
+        </div>
+        
+        <div class="profile-section">
+            <div class="action-buttons">
+                <a href="{% url 'notes_dashboard' %}" class="header-btn back-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    Go Back
+                </a>
+            </div>
+        </div>
+    </header>
+
+    {% block body %}
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <div class="page-title">
+                <h1><i class="fas fa-book-open"></i> Browse Notes</h1>
+                <p>Discover and download study materials shared by the community</p>
+            </div>
+            <div>
+                <a href="{% url 'upload_notes' %}" class="btn btn-primary"><i class="fas fa-upload"></i> Upload Notes</a>
+            </div>
+        </div>
+        
+        <!-- Search and Filter Section -->
+        <div class="card mb-4">
+            <div class="card-header card-header-gradient">
+                <h3><i class="fas fa-search"></i> Search & Filter</h3>
+            </div>
+            <div class="card-body">
+                <form method="get" class="search-form">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="search"><i class="fas fa-search"></i> Search</label>
+                                <input type="text" name="search" id="search" class="form-control" placeholder="Search by title, description or course" value="{{ request.GET.search|default:'' }}">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="course_code"><i class="fas fa-hashtag"></i> Course Code</label>
+                                <input type="text" name="course_code" id="course_code" class="form-control" placeholder="e.g. CS101" value="{{ request.GET.course_code|default:'' }}">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="sort_by"><i class="fas fa-sort"></i> Sort By</label>
+                                <select name="sort_by" id="sort_by" class="form-control">
+                                    <option value="recent" {% if request.GET.sort_by == 'recent' or not request.GET.sort_by %}selected{% endif %}>Most Recent</option>
+                                    <option value="title_asc" {% if request.GET.sort_by == 'title_asc' %}selected{% endif %}>Title (A-Z)</option>
+                                    <option value="title_desc" {% if request.GET.sort_by == 'title_desc' %}selected{% endif %}>Title (Z-A)</option>
+                                    
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center mt-3">
+                        <button type="submit" class="btn btn-primary px-4"><i class="fas fa-filter"></i> Apply Filters</button>
+                        <a href="{% url 'browse_notes' %}" class="btn btn-outline-secondary ml-2"><i class="fas fa-sync"></i> Reset</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Notes Grid -->
+        <div class="notes-container">
+            {% if notes %}
+                <div class="row">
+                    {% for note in notes %}
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="note-card">
+                            <div class="note-card-header">
+                                <div class="note-icon">
+                                    {% if note.file.name|lower|slice:"-3:" == "pdf" %}
+                                        <i class="fas fa-file-pdf"></i>
+                                    {% elif note.file.name|lower|slice:"-3:" == "doc" or note.file.name|lower|slice:"-4:" == "docx" %}
+                                        <i class="fas fa-file-word"></i>
+                                    {% else %}
+                                        <i class="fas fa-file-alt"></i>
+                                    {% endif %}
+                                </div>
+                                <div class="note-details">
+                                    <h3 class="note-title">{{ note.title|truncatechars:40 }}</h3>
+                                    <div class="note-meta">
+                                        <span><i class="fas fa-hashtag"></i> {{ note.course_code }}</span>
+                                        <span><i class="fas fa-calendar-alt"></i> {{ note.uploaded_at|date:"M d, Y" }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="note-card-body">
+                                <p class="note-course">{{ note.course_name }}</p>
+                                <p class="note-description">{{ note.description|truncatechars:100 }}</p>
+                                <p class="note-author">By <strong>{{ note.user.username }}</strong></p>
+                            </div>
+                            <div class="note-card-footer">
+                                <a href="{{ note.file.url }}" class="btn btn-download" download data-note-id="{{ note.id }}">
+                                    <i class="fas fa-download"></i> Download
+                                </a>
+                                <a href="#" class="btn btn-preview" data-toggle="modal" data-target="#previewModal{{ note.id }}">
+                                    <i class="fas fa-eye"></i> Preview
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Preview Modal for each note -->
+                    <div class="modal fade" id="previewModal{{ note.id }}" tabindex="-1" role="dialog" aria-labelledby="previewModalLabel{{ note.id }}" aria-hidden="true">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="previewModalLabel{{ note.id }}">{{ note.title }}</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="note-preview-details">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <p><strong>Course:</strong> {{ note.course_name }} ({{ note.course_code }})</p>
+                                                <p><strong>Uploaded By:</strong> {{ note.user.username }}</p>
+                                                <p><strong>Date:</strong> {{ note.uploaded_at|date:"F d, Y" }}</p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p><strong>File Type:</strong> 
+                                                    {% if note.file.name|lower|slice:"-3:" == "pdf" %}
+                                                        PDF Document
+                                                    {% elif note.file.name|lower|slice:"-3:" == "doc" %}
+                                                        Word Document (.doc)
+                                                    {% elif note.file.name|lower|slice:"-4:" == "docx" %}
+                                                        Word Document (.docx)
+                                                    {% else %}
+                                                        Document
+                                                    {% endif %}
+                                                </p>
+                                                <p><strong>Downloads:</strong> {{ note.downloads|default:"0" }}</p>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <h6>Description:</h6>
+                                        <p>{{ note.description }}</p>
+                                        
+                                        {% if note.file.name|lower|slice:"-3:" == "pdf" %}
+                                        <div class="pdf-preview">
+                                            <object data="{{ note.file.url }}" type="application/pdf" width="100%" height="500px">
+                                                <p>It appears you don't have a PDF plugin for this browser. 
+                                                You can <a href="{{ note.file.url }}" download>click here to download the PDF file.</a></p>
+                                            </object>
+                                        </div>
+                                        {% else %}
+                                        <div class="preview-unavailable">
+                                            <div class="text-center py-4">
+                                                <i class="fas fa-file-alt fa-4x mb-3"></i>
+                                                <p>Preview not available for this file type.</p>
+                                                <a href="{{ note.file.url }}" class="btn btn-primary mt-3" download data-note-id="{{ note.id }}">
+                                                    <i class="fas fa-download"></i> Download File
+                                                </a>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <a href="{{ note.file.url }}" class="btn btn-primary" download data-note-id="{{ note.id }}">
+                                        <i class="fas fa-download"></i> Download
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <!-- Pagination -->
+                {% if notes.has_other_pages %}
+                <div class="pagination-container">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination">
+                            {% if notes.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ notes.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.course_code %}&course_code={{ request.GET.course_code }}{% endif %}{% if request.GET.sort_by %}&sort_by={{ request.GET.sort_by }}{% endif %}" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                            
+                            {% for i in notes.paginator.page_range %}
+                                {% if notes.number == i %}
+                                    <li class="page-item active"><a class="page-link" href="#">{{ i }}</a></li>
+                                {% else %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ i }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.course_code %}&course_code={{ request.GET.course_code }}{% endif %}{% if request.GET.sort_by %}&sort_by={{ request.GET.sort_by }}{% endif %}">{{ i }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                            
+                            {% if notes.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ notes.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.course_code %}&course_code={{ request.GET.course_code }}{% endif %}{% if request.GET.sort_by %}&sort_by={{ request.GET.sort_by }}{% endif %}" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+                {% endif %}
+                
+            {% else %}
+                <div class="no-notes-found">
+                    <div class="text-center py-4">
+                        <i class="fas fa-search fa-4x mb-3"></i>
+                        <h3>No Notes Found</h3>
+                        <p class="lead">We couldn't find any notes matching your criteria.</p>
+                        <a href="{% url 'browse_notes' %}" class="btn btn-primary mt-3">Clear Filters</a>
+                        <a href="{% url 'upload_notes' %}" class="btn btn-outline-primary mt-3 ml-2">Upload Notes</a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endblock %}
+
+    <!-- Footer -->
+    <footer class="minimalist-footer">
+        <div class="footer-content">
+            <p class="footer-tagline"><span class="vit-text">VITStudyMates</span> - <span class="tagline-text">Everything a VITian Needs</span></p>
+        </div>
+    </footer>
+
+    <!-- Include Bootstrap JS and dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/js/bootstrap.min.js"></script>
+
+    <script>
+        // Track downloads
+        document.addEventListener('DOMContentLoaded', function() {
+            const downloadLinks = document.querySelectorAll('a[download][data-note-id]');
+            downloadLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    const noteId = this.getAttribute('data-note-id');
+                    if (noteId) {
+                        fetch(`/track-download/${noteId}/`, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRFToken': '{{ csrf_token }}',
+                                'Content-Type': 'application/json'
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

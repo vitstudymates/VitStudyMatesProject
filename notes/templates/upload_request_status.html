@@ -1,0 +1,484 @@
+{% load static %}
+
+{% block title %}Upload Notes{% endblock %}
+
+{% block body %}
+<div class="dashboard-container">
+    {% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endfor %}
+{% endif %}
+    <div class="dashboard-header">
+        <div class="user-info">
+            <div class="user-avatar">
+                {% if user.profile.photo %}
+                    <img src="{{ user.profile.photo.url }}" alt="Profile Photo">
+                {% else %}
+                    <img src="{% static 'images/default-profile.png' %}" alt="Default Profile">
+                {% endif %}
+            </div>
+            <div class="user-welcome">
+                <h1>Upload Notes</h1>
+                <p>Share your knowledge with the community</p>
+            </div>
+        </div>
+        <div>
+            <a href="" class="btn btn-primary"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-8">
+            <div class="notes-upload-section">
+                <div class="card">
+                    <div class="card-header card-header-gradient">
+                        <h3><i class="fas fa-upload"></i> Upload New Notes</h3>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            
+                            <div class="form-group">
+                                <label for="{{ form.title.id_for_label }}"><i class="fas fa-heading"></i> Title</label>
+                                {{ form.title }}
+                                {% if form.title.errors %}
+                                    <div class="text-danger">{{ form.title.errors }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="form-group mt-4">
+                                <label for="{{ form.description.id_for_label }}"><i class="fas fa-align-left"></i> Description</label>
+                                {{ form.description }}
+                                {% if form.description.errors %}
+                                    <div class="text-danger">{{ form.description.errors }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="row mt-4">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="{{ form.course_code.id_for_label }}"><i class="fas fa-hashtag"></i> Course Code</label>
+                                        {{ form.course_code }}
+                                        {% if form.course_code.errors %}
+                                            <div class="text-danger">{{ form.course_code.errors }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="{{ form.course_name.id_for_label }}"><i class="fas fa-book"></i> Course Name</label>
+                                        {{ form.course_name }}
+                                        {% if form.course_name.errors %}
+                                            <div class="text-danger">{{ form.course_name.errors }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group mt-4">
+                                <label for="{{ form.file.id_for_label }}"><i class="fas fa-file-pdf"></i> Upload PDF File</label>
+                                {{ form.file }}
+                                <small class="form-text text-muted">Accepted formats: PDF, DOC, DOCX (Max size: 10MB)</small>
+                                {% if form.file.errors %}
+                                    <div class="text-danger">{{ form.file.errors }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="form-group mt-4">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fas fa-cloud-upload-alt"></i> Upload Notes
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="upload-guidelines">
+                <div class="card mb-4">
+                    <div class="card-header card-header-gradient">
+                        <h3><i class="fas fa-info-circle"></i> Guidelines</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="guidelines-list">
+                            <li><i class="fas fa-check-circle text-success"></i> Notes should be your own original work</li>
+                            <li><i class="fas fa-check-circle text-success"></i> Maximum file size is 10MB</li>
+                            <li><i class="fas fa-check-circle text-success"></i> Only PDF, DOC, and DOCX formats are accepted</li>
+                            <li><i class="fas fa-check-circle text-success"></i> Be sure to provide accurate course information</li>
+                            <li><i class="fas fa-check-circle text-success"></i> Uploads are immediately available to all users</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header card-header-gradient">
+                        <h3><i class="fas fa-trophy"></i> Benefits</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="benefits-list">
+                            <li><i class="fas fa-star text-warning"></i> Earn points for each uploaded note</li>
+                            <li><i class="fas fa-star text-warning"></i> Get recognition in the community</li>
+                            <li><i class="fas fa-star text-warning"></i> Help fellow students in their academic journey</li>
+                            <li><i class="fas fa-star text-warning"></i> Achieve top contributor status</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="recent-uploads mt-5">
+        <div class="card">
+            <div class="card-header card-header-gradient">
+                <h3><i class="fas fa-history"></i> Your Recent Uploads</h3>
+            </div>
+            <div class="card-body">
+                {% if user_notes %}
+                <div class="table-responsive">
+                    <table class="table notes-table">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Course Code</th>
+                                <th>Course Name</th>
+                                <th>Date Uploaded</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for note in user_notes %}
+                            <tr>
+                                <td>{{ note.title }}</td>
+                                <td>{{ note.course_code }}</td>
+                                <td>{{ note.course_name }}</td>
+                                <td>{{ note.uploaded_at|date:"M d, Y" }}</td>
+                                <td>
+                                    <span class="badge badge-success">Available</span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <i class="fas fa-file-alt fa-4x text-muted mb-3"></i>
+                    <p class="lead">You haven't uploaded any notes yet.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Popup Alert -->
+<div class="popup-overlay" id="popupOverlay" style="display: none;">
+    <div class="popup-content">
+        <div class="popup-icon" id="popupIcon"></div>
+        <div class="popup-message" id="popupMessage"></div>
+        <button class="btn btn-primary popup-button" onclick="closePopup()">OK</button>
+    </div>
+</div>
+
+<style>
+    /* Base styles */
+    .dashboard-container {
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    .dashboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+    
+    .user-info {
+        display: flex;
+        align-items: center;
+    }
+    
+    .user-avatar img {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 15px;
+        border: 3px solid var(--primary, #3498db);
+    }
+    
+    /* Card styles */
+    .card {
+        border-radius: 8px;
+        overflow: hidden;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        border: none;
+    }
+    
+    .card-header-gradient {
+        background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+        color: white;
+        padding: 15px 20px;
+    }
+    
+    .card-header-gradient h3 {
+        margin: 0;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .card-header-gradient h3 i {
+        margin-right: 10px;
+    }
+    
+    .card-body {
+        background: white;
+        padding: 25px;
+    }
+    
+    /* Form styles */
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+    }
+    
+    .form-control, input[type="text"], textarea, select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+    
+    textarea {
+        min-height: 120px;
+    }
+    
+    .btn {
+        padding: 10px 20px;
+        border-radius: 4px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    
+    .btn-primary {
+        background-color: #3498db;
+        color: white;
+        border: none;
+    }
+    
+    .btn-primary:hover {
+        background-color: #2980b9;
+    }
+    
+    /* List styles */
+    .guidelines-list,
+    .benefits-list {
+        list-style-type: none;
+        padding-left: 0;
+    }
+    
+    .guidelines-list li,
+    .benefits-list li {
+        padding: 8px 0;
+        display: flex;
+        align-items: center;
+    }
+    
+    .guidelines-list li i,
+    .benefits-list li i {
+        margin-right: 10px;
+        font-size: 16px;
+    }
+    
+    /* Table styles */
+    .notes-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    .notes-table th,
+    .notes-table td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .notes-table th {
+        background-color: #f5f5f5;
+        font-weight: 600;
+    }
+    
+    .badge {
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 500;
+    }
+    
+    .badge-warning {
+        background-color: #f39c12;
+        color: white;
+    }
+    
+    .badge-success {
+        background-color: #2ecc71;
+        color: white;
+    }
+    
+    .badge-danger {
+        background-color: #e74c3c;
+        color: white;
+    }
+    
+    /* Popup styles */
+    .popup-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+    
+    .popup-content {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        text-align: center;
+        max-width: 400px;
+        width: 90%;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .popup-icon {
+        font-size: 50px;
+        margin-bottom: 20px;
+    }
+    
+    .popup-icon.success i {
+        color: #2ecc71;
+    }
+    
+    .popup-icon.error i {
+        color: #e74c3c;
+    }
+    
+    .popup-message {
+        margin-bottom: 20px;
+        font-size: 18px;
+    }
+    
+    /* Mobile responsiveness */
+    @media (max-width: 768px) {
+        .dashboard-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .dashboard-header > div:last-child {
+            margin-top: 15px;
+            width: 100%;
+        }
+        
+        .dashboard-header > div:last-child a {
+            width: 100%;
+            text-align: center;
+        }
+    }
+</style>
+
+<script>
+    function showPopup(type, message) {
+        const icon = document.getElementById('popupIcon');
+        const messageElement = document.getElementById('popupMessage');
+        const overlay = document.getElementById('popupOverlay');
+
+        // Clear any existing content
+        icon.innerHTML = '';
+        
+        if (type === 'success') {
+            icon.innerHTML = '<i class="fas fa-check-circle"></i>';
+            icon.className = 'popup-icon success';
+        } else {
+            icon.innerHTML = '<i class="fas fa-times-circle"></i>';
+            icon.className = 'popup-icon error';
+        }
+
+        messageElement.textContent = message;
+        overlay.style.display = 'flex';
+
+        // Auto close after 3 seconds
+        setTimeout(closePopup, 3000);
+    }
+
+    function closePopup() {
+        const overlay = document.getElementById('popupOverlay');
+        if (overlay) {
+            overlay.style.display = 'none';
+        }
+    }
+
+    // Ensure this runs when the DOM is fully loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize the popup if there are any messages
+        {% if messages %}
+            {% for message in messages %}
+                showPopup('{{ message.tags }}', '{{ message|escapejs }}');
+            {% endfor %}
+        {% endif %}
+        
+        // Fix form styling
+        const inputs = document.querySelectorAll('input[type="text"], textarea, select');
+        inputs.forEach(input => {
+            input.classList.add('form-control');
+        });
+    });
+    
+    // Add file input change listener to show selected file name
+    document.addEventListener('DOMContentLoaded', function() {
+        const fileInput = document.querySelector('input[type="file"]');
+        if (fileInput) {
+            fileInput.classList.add('form-control');
+            fileInput.addEventListener('change', function() {
+                const fileName = this.value.split('\\').pop();
+                if (fileName) {
+                    const fileNameDisplay = document.createElement('div');
+                    fileNameDisplay.className = 'mt-2 text-primary';
+                    fileNameDisplay.innerHTML = '<i class="fas fa-file"></i> ' + fileName;
+                    
+                    // Remove any previous display
+                    const previousDisplay = this.parentElement.querySelector('.text-primary');
+                    if (previousDisplay) {
+                        previousDisplay.remove();
+                    }
+                    
+                    this.parentElement.appendChild(fileNameDisplay);
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

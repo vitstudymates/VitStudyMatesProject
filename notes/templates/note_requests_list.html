@@ -1,0 +1,792 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Note Requests{% endblock %}
+
+{% block extra_css %}
+<style>
+/* General Layout */
+.dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px 15px;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Dashboard Header */
+.dashboard-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eaeaea;
+}
+
+.page-title h1 {
+    font-size: 2.2rem;
+    margin-bottom: 5px;
+    color: #2c3e50;
+    display: flex;
+    align-items: center;
+}
+
+.page-title h1 i {
+    margin-right: 12px;
+    color: #574DB8; /* Changed to #574DB8 violet */
+}
+
+.page-title p {
+    color: #7f8c8d;
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+/* Buttons */
+.btn {
+    border-radius: 6px;
+    padding: 10px 20px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.btn i {
+    margin-right: 8px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #574DB8, #3D348B); /* Changed to violet gradient */
+    border: none;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #3D348B, #2A1B6D); /* Darker violet on hover */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(87, 77, 184, 0.3); /* Adjusted shadow color */
+}
+
+.btn-outline-primary {
+    border: 2px solid #574DB8; /* Changed to #574DB8 violet */
+    color: #574DB8; /* Changed to #574DB8 violet */
+    background: transparent;
+}
+
+.btn-outline-primary:hover {
+    background: rgba(87, 77, 184, 0.1); /* Changed to #574DB8 violet */
+    transform: translateY(-2px);
+}
+
+/* Special styling for browse and upload buttons */
+a.btn-outline-primary[href*="browse_notes"],
+a.btn-primary[href*="upload_notes"] {
+    background: linear-gradient(135deg, #FF9800, #F57C00); /* Orange gradient */
+    border: none;
+    color: white;
+}
+
+a.btn-outline-primary[href*="browse_notes"]:hover,
+a.btn-primary[href*="upload_notes"]:hover {
+    background: linear-gradient(135deg, #F57C00, #E65100); /* Darker orange on hover */
+    box-shadow: 0 6px 8px rgba(255, 152, 0, 0.3); /* Orange shadow */
+}
+
+/* Cards */
+.card {
+    border-radius: 12px;
+    border: none;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+    margin-bottom: 40px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+}
+
+.card-header-gradient {
+    background: linear-gradient(135deg, #574DB8, #3D348B); /* Changed to violet gradient */
+    color: white;
+    padding: 18px 25px;
+    border: none;
+}
+
+.card-header h3 {
+    margin: 0;
+    font-size: 1.4rem;
+    display: flex;
+    align-items: center;
+}
+
+.card-header h3 i {
+    margin-right: 10px;
+}
+
+.card-body {
+    padding: 30px;
+}
+
+/* Form Styling */
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    font-weight: 500;
+    color: #574DB8; /* Using #574DB8 violet */
+    margin-bottom: 10px;
+    display: block;
+}
+
+.form-group label i {
+    color: #574DB8; /* Using #574DB8 violet */
+    margin-right: 6px;
+}
+
+.form-control {
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    padding: 14px 16px;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    background-color: #f9f9f9;
+}
+
+.form-control:focus {
+    border-color: #574DB8; /* Using #574DB8 violet */
+    box-shadow: 0 0 0 3px rgba(87, 77, 184, 0.2); /* Adjusted shadow color */
+    background-color: #fff;
+}
+
+.form-control::placeholder {
+    color: #bdc3c7;
+    font-size: 0.9rem;
+}
+
+textarea.form-control {
+    min-height: 120px;
+    resize: vertical;
+}
+
+/* Tabs Styling */
+.thread-tabs {
+    border-bottom: 2px solid #eaeaea;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.nav-tabs .nav-link {
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: #7f8c8d;
+    font-weight: 500;
+    padding: 12px 20px;
+    transition: all 0.3s ease;
+    border-radius: 8px 8px 0 0;
+}
+
+.nav-tabs .nav-link:hover {
+    border-color: rgba(87, 77, 184, 0.5); /* Changed to #574DB8 violet */
+    color: #574DB8; /* Using #574DB8 violet */
+    background-color: rgba(87, 77, 184, 0.05); /* Adjusted background color */
+}
+
+.nav-tabs .nav-link.active {
+    border-color: #574DB8; /* Using #574DB8 violet */
+    color: #574DB8; /* Using #574DB8 violet */
+    font-weight: 600;
+    background-color: rgba(87, 77, 184, 0.1); /* Adjusted background color */
+}
+
+.nav-tabs .nav-link i {
+    margin-right: 8px;
+}
+
+.badge-pill {
+    background: #ecf0f1;
+    color: #7f8c8d;
+    font-weight: normal;
+    padding: 4px 10px;
+    border-radius: 12px;
+    margin-left: 5px;
+}
+
+/* Thread Cards */
+.thread-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.07);
+    margin-bottom: 25px;
+    padding: 25px;
+    transition: all 0.3s ease;
+    border-left: 5px solid #574DB8; /* Using #574DB8 violet */
+}
+
+.thread-card:hover {
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    transform: translateY(-3px);
+}
+
+.thread-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.thread-title {
+    font-size: 1.3rem;
+    margin: 0 0 8px;
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.thread-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    color: #7f8c8d;
+    font-size: 0.9rem;
+}
+
+.thread-meta span {
+    display: flex;
+    align-items: center;
+}
+
+.thread-meta i {
+    margin-right: 5px;
+    color: #574DB8; /* Using #574DB8 violet */
+}
+
+.thread-status {
+    padding: 5px 15px;
+    border-radius: 30px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: inline-block;
+    min-width: 80px;
+    text-align: center;
+}
+
+.status-open {
+    background-color: rgba(46, 204, 113, 0.15);
+    color: #FF5757;
+}
+
+.status-closed {
+    background-color: rgba(231, 76, 60, 0.15);
+    color: #27ae60;
+}
+
+.thread-preview {
+    color: #574DB8; /* Using #574DB8 violet */
+    margin-bottom: 15px;
+    line-height: 1.7;
+    font-size: 1rem;
+}
+
+.thread-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 15px;
+    border-top: 1px solid #f1f1f1;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.thread-replies {
+    color: #7f8c8d;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+}
+
+.thread-replies i {
+    margin-right: 8px;
+    color: #574DB8; /* Using #574DB8 violet */
+    font-size: 1.1rem;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 80px 20px;
+    color: #7f8c8d;
+    background-color: rgba(236, 240, 241, 0.5);
+    border-radius: 12px;
+}
+
+.empty-state i {
+    font-size: 5rem;
+    color: #bdc3c7;
+    margin-bottom: 25px;
+}
+
+.empty-state h3 {
+    font-size: 1.6rem;
+    margin-bottom: 15px;
+    color: #574DB8; /* Using #574DB8 violet */
+}
+
+.empty-state p {
+    font-size: 1.1rem;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+/* Pagination */
+.pagination {
+    margin-top: 30px;
+}
+
+.pagination .page-link {
+    color: #574DB8; /* Using #574DB8 violet */
+    border: 1px solid #eaeaea;
+    margin: 0 5px;
+    border-radius: 8px;
+    padding: 10px 15px;
+    transition: all 0.3s ease;
+}
+
+.pagination .page-link:hover {
+    background-color: rgba(87, 77, 184, 0.1); /* Adjusted background color */
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #574DB8; /* Using #574DB8 violet */
+    border-color: #574DB8; /* Using #574DB8 violet */
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #bdc3c7;
+}
+
+/* Success Popup */
+.success-popup {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    padding: 20px 30px;
+    z-index: 9999;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    max-width: 350px;
+    border-left: 5px solid #2ecc71;
+}
+
+.success-popup.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.success-popup-content {
+    display: flex;
+    align-items: center;
+    text-align: left;
+}
+
+.success-popup-icon {
+    background-color: rgba(46, 204, 113, 0.15);
+    color: #2ecc71;
+    font-size: 1.8rem;
+    padding: 10px;
+    border-radius: 50%;
+    margin-right: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+}
+
+.success-popup-text h4 {
+    margin: 0 0 5px;
+    color: #574DB8; /* Using #574DB8 violet */
+    font-size: 1.2rem;
+}
+
+.success-popup-text p {
+    margin: 0;
+    color: #574DB8; /* Using #574DB8 violet */
+    font-size: 0.95rem;
+}
+
+/* Post Request Button */
+.post-request-btn {
+    display: block;
+    margin: 0 auto 30px;
+    padding: 12px 30px;
+    font-size: 1.1rem;
+    background: linear-gradient(135deg, #574DB8, #3D348B); /* Changed to violet gradient */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(87, 77, 184, 0.3); /* Adjusted shadow color */
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+
+.post-request-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(87, 77, 184, 0.4); /* Adjusted shadow color */
+}
+
+.post-request-btn i {
+    margin-right: 10px;
+}
+
+/* Form submit button */
+.form-submit-btn {
+    padding: 12px 40px;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    margin-top: 10px;
+}
+
+/* Animation effects */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.thread-card {
+    animation: fadeIn 0.5s ease forwards;
+}
+
+.thread-card:nth-child(1) { animation-delay: 0.1s; }
+.thread-card:nth-child(2) { animation-delay: 0.2s; }
+.thread-card:nth-child(3) { animation-delay: 0.3s; }
+.thread-card:nth-child(4) { animation-delay: 0.4s; }
+.thread-card:nth-child(5) { animation-delay: 0.5s; }
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .dashboard-header > div:last-child {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .dashboard-header .btn {
+        flex: 1;
+        text-align: center;
+        justify-content: center;
+    }
+    
+    .thread-header {
+        flex-direction: column;
+    }
+    
+    .thread-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .thread-footer .btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .nav-tabs {
+        gap: 0;
+    }
+    
+    .nav-tabs .nav-link {
+        padding: 10px 15px;
+        font-size: 0.9rem;
+    }
+    
+    .thread-meta {
+        gap: 10px;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .card-body {
+        padding: 20px 15px;
+    }
+}
+/* Update JS hover effect color */
+
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <div class="page-title">
+            <h1><i class="fas fa-comments"></i> Note Requests</h1>
+            <p>Ask for notes you need or help others by sharing yours</p>
+        </div>
+        <div>
+            <a href="{% url 'browse_notes' %}" class="btn btn-outline-primary mr-2"><i class="fas fa-book-open"></i> Browse Notes</a>
+            <a href="{% url 'upload_notes' %}" class="btn btn-primary"><i class="fas fa-upload"></i> Upload Notes</a>
+        </div>
+    </div>
+    
+    <!-- Post Request Button -->
+    <button id="show-request-form" class="post-request-btn"><i class="fas fa-plus-circle"></i> Post New Request</button>
+    
+    <!-- Create New Request -->
+    <div class="card" id="request-form-card" style="display: none;">
+        <div class="card-header card-header-gradient">
+            <h3><i class="fas fa-plus-circle"></i> Create Note Request</h3>
+        </div>
+        <div class="card-body">
+            <form class="request-form" method="post" action="{% url 'create_note_request' %}">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="id_title"><i class="fas fa-heading"></i> Request Title</label>
+                            <input type="text" class="form-control" id="id_title" name="title" placeholder="E.g., Need CS101 Algorithms Notes" required>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="id_course_code"><i class="fas fa-hashtag"></i> Course Code</label>
+                            <input type="text" class="form-control" id="id_course_code" name="course_code" placeholder="E.g., CS101">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="id_course_name"><i class="fas fa-bookmark"></i> Course Name</label>
+                            <input type="text" class="form-control" id="id_course_name" name="course_name" placeholder="E.g., Introduction to Algorithms">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="id_description"><i class="fas fa-align-left"></i> Request Details</label>
+                    <textarea class="form-control" id="id_description" name="description" placeholder="Describe what notes you're looking for and any specific topics or requirements..." required></textarea>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary form-submit-btn"><i class="fas fa-paper-plane"></i> Post Request</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Message Threads Section -->
+    <div class="message-threads">
+        <ul class="nav nav-tabs thread-tabs mb-4">
+            <li class="nav-item">
+                <a class="nav-link {% if active_tab == 'all' %}active{% endif %}" href="?tab=all">
+                    <i class="fas fa-list"></i> All Requests <span class="badge badge-pill">{{ all_count }}</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if active_tab == 'my' %}active{% endif %}" href="?tab=my">
+                    <i class="fas fa-user"></i> My Requests <span class="badge badge-pill">{{ my_count }}</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if active_tab == 'open' %}active{% endif %}" href="?tab=open">
+                    <i class="fas fa-folder-open"></i> Open <span class="badge badge-pill">{{ open_count }}</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if active_tab == 'solved' %}active{% endif %}" href="?tab=solved">
+                    <i class="fas fa-check-circle"></i> Solved <span class="badge badge-pill">{{ solved_count }}</span>
+                </a>
+            </li>
+        </ul>
+        
+        <div class="tab-content">
+            <div class="tab-pane fade show active" role="tabpanel">
+                <!-- Thread Cards -->
+                {% if note_requests %}
+                    {% for request in note_requests %}
+                    <div class="thread-card">
+                        <div class="thread-header">
+                            <div>
+                                <h3 class="thread-title">{{ request.title }}</h3>
+                                <div class="thread-meta">
+                                    {% if request.course_code %}
+                                    <span><i class="fas fa-hashtag"></i> {{ request.course_code }}</span>
+                                    {% endif %}
+                                    <span><i class="fas fa-user"></i> {{ request.user.username }}</span>
+                                    <span><i class="fas fa-calendar-alt"></i> {{ request.created_at|date:"F d, Y" }}</span>
+                                </div>
+                            </div>
+                            <span class="thread-status {% if request.status == 'open' %}status-open{% else %}status-closed{% endif %}">
+                                {% if request.status == 'open' %}<i class="fas fa-folder-open mr-1"></i>{% else %}<i class="fas fa-check-circle mr-1"></i>{% endif %}
+                                {{ request.status|title }}
+                            </span>
+                        </div>
+                        <div class="thread-preview">
+                            <p>{{ request.description|truncatechars:200 }}</p>
+                        </div>
+                        <div class="thread-footer">
+                            <div class="thread-replies">
+                                <i class="fas fa-comment-alt"></i> {{ request.reply_count }} replies
+                            </div>
+                            <a href="{% url 'note_request_detail' request.id %}" class="btn btn-sm btn-primary">View Thread</a>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                    <!-- Pagination -->
+                    {% if note_requests.has_other_pages %}
+                    <div class="d-flex justify-content-center mt-4">
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination">
+                                {% if note_requests.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ note_requests.previous_page_number }}&tab={{ active_tab }}" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                                {% else %}
+                                <li class="page-item disabled">
+                                    <span class="page-link">&laquo;</span>
+                                </li>
+                                {% endif %}
+                                
+                                {% for i in note_requests.paginator.page_range %}
+                                    {% if note_requests.number == i %}
+                                    <li class="page-item active">
+                                        <span class="page-link">{{ i }}</span>
+                                    </li>
+                                    {% else %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ i }}&tab={{ active_tab }}">{{ i }}</a>
+                                    </li>
+                                    {% endif %}
+                                {% endfor %}
+                                
+                                {% if note_requests.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ note_requests.next_page_number }}&tab={{ active_tab }}" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                                {% else %}
+                                <li class="page-item disabled">
+                                    <span class="page-link">&raquo;</span>
+                                </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    </div>
+                    {% endif %}
+                {% else %}
+                    <div class="empty-state">
+                        <i class="fas fa-comments"></i>
+                        <h3>No note requests found</h3>
+                        <p>Be the first to create a note request!</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript Libraries -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/js/bootstrap.min.js"></script>
+
+<script>
+    
+    $(document).ready(function() {
+    // Show/hide request form
+    $('#show-request-form').click(function() {
+        $(this).fadeOut(300);
+        $('#request-form-card').slideDown(500);
+    });
+    
+    // Handle form submission via AJAX
+    $('.request-form').submit(function(e) {
+        e.preventDefault();
+        
+        $.ajax({
+            type: "POST",
+            url: $(this).attr('action'),
+            data: $(this).serialize(),
+            success: function(response) {
+                // Clear the form
+                $('.request-form')[0].reset();
+                
+                // Hide the form
+                $('#request-form-card').slideUp(300);
+                $('#show-request-form').fadeIn(300);
+                
+                // Show success popup
+                showSuccessPopup();
+                
+                // Refresh the requests list after a delay
+                setTimeout(function() {
+                    location.reload();
+                }, 2000);
+            },
+            error: function(error) {
+                alert("Error submitting request. Please try again.");
+            }
+        });
+    });
+    
+    function showSuccessPopup() {
+        const popup = `
+            <div class="success-popup">
+                <div class="success-popup-content">
+                    <div class="success-popup-icon">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div class="success-popup-text">
+                        <h4>Success!</h4>
+                        <p>Your note request has been submitted successfully.</p>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        $('body').append(popup);
+        
+        setTimeout(function() {
+            $('.success-popup').addClass('show');
+        }, 100);
+        
+        setTimeout(function() {
+            $('.success-popup').removeClass('show');
+            setTimeout(function() {
+                $('.success-popup').remove();
+            }, 500);
+        }, 3000);
+    }
+    
+    // Add hover effects to thread cards
+    $('.thread-card').hover(
+        function() {
+            $(this).find('.thread-title').css('color', '#574DB8'); // Changed to #574DB8 violet
+        },
+        function() {
+            $(this).find('.thread-title').css('color', '#2c3e50');
+        }
+    );
+});
+</script>
+{% endblock %}

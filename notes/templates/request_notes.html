@@ -1,0 +1,284 @@
+{% load static %}
+
+{% block title %}Request Notes{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <div class="user-info">
+            <h1>Request Notes</h1>
+            <p>Can't find what you need? Submit a request for specific notes.</p>
+        </div>
+        <div>
+            <a href="{% url 'view_all_requests' %}" class="btn btn-primary">
+                <i class="fas fa-list"></i> View All Requests
+            </a>
+        </div>
+    </div>
+    
+    <div class="request-form-container">
+        <div class="card">
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {% for error in form.non_field_errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    
+                    <div class="form-group">
+                        <label for="{{ form.title.id_for_label }}">Request Title</label>
+                        {{ form.title }}
+                        {% if form.title.errors %}
+                            <div class="text-danger">{{ form.title.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="{{ form.description.id_for_label }}">Description</label>
+                        {{ form.description }}
+                        {% if form.description.errors %}
+                            <div class="text-danger">{{ form.description.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="{{ form.subject.id_for_label }}">Subject</label>
+                            {{ form.subject }}
+                            {% if form.subject.errors %}
+                                <div class="text-danger">{{ form.subject.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="{{ form.course.id_for_label }}">Course/Program</label>
+                            {{ form.course }}
+                            {% if form.course.errors %}
+                                <div class="text-danger">{{ form.course.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="{{ form.semester.id_for_label }}">Semester (Optional)</label>
+                            {{ form.semester }}
+                            {% if form.semester.errors %}
+                                <div class="text-danger">{{ form.semester.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="{{ form.deadline.id_for_label }}">Need by (Optional)</label>
+                            {{ form.deadline }}
+                            {% if form.deadline.errors %}
+                                <div class="text-danger">{{ form.deadline.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="form-group mt-4 text-center">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-paper-plane"></i> Submit Request
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Base variables */
+    :root {
+        --primary: #7b68ee;
+        --primary-hover: #6a5acd;
+        --text-dark: #333;
+        --text-light: #64748b;
+        --border-radius: 10px;
+        --box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        --transition: all 0.3s ease;
+    }
+    
+    /* Container styles */
+    .dashboard-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    .dashboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+    
+    .user-info h1 {
+        margin: 0 0 10px 0;
+        font-size: 2rem;
+        color: var(--text-dark);
+        font-weight: 600;
+    }
+    
+    .user-info p {
+        margin: 0;
+        color: var(--text-light);
+        font-size: 1.1rem;
+    }
+    
+    /* Card styles */
+    .request-form-container {
+        margin-bottom: 30px;
+    }
+    
+    .card {
+        background-color: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        border: none;
+        overflow: hidden;
+    }
+    
+    .card-body {
+        padding: 30px;
+    }
+    
+    /* Form styles */
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: var(--text-dark);
+        font-size: 0.95rem;
+    }
+    
+    .form-group input, .form-group textarea, .form-group select {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #e2e8f0;
+        border-radius: var(--border-radius);
+        font-size: 1rem;
+        transition: var(--transition);
+        background-color: #f9fafb;
+        color: var(--text-dark);
+    }
+    
+    .form-group textarea {
+        min-height: 120px;
+        resize: vertical;
+    }
+    
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+        border-color: var(--primary);
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(123, 104, 238, 0.15);
+        background-color: white;
+    }
+    
+    .form-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+    
+    .form-row .form-group {
+        flex: 1;
+        min-width: 200px;
+    }
+    
+    /* Button styles */
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 10px 16px;
+        border-radius: var(--border-radius);
+        text-decoration: none;
+        font-weight: 500;
+        cursor: pointer;
+        transition: var(--transition);
+        border: none;
+        font-size: 0.95rem;
+    }
+    
+    .btn-primary {
+        background-color: var(--primary);
+        color: white;
+    }
+    
+    .btn-primary:hover {
+        background-color: var(--primary-hover);
+        box-shadow: 0 4px 12px rgba(123, 104, 238, 0.3);
+        transform: translateY(-2px);
+    }
+    
+    .btn-lg {
+        padding: 12px 24px;
+        font-size: 1.1rem;
+    }
+    
+    /* Alert and text styles */
+    .text-danger {
+        color: #dc3545;
+        font-size: 0.85rem;
+        margin-top: 5px;
+    }
+    
+    .alert {
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: var(--border-radius);
+        border-left: 4px solid;
+    }
+    
+    .alert-danger {
+        background-color: #fff5f5;
+        border-color: #dc3545;
+        color: #dc3545;
+    }
+    
+    .text-center {
+        text-align: center;
+    }
+    
+    .mt-4 {
+        margin-top: 24px;
+    }
+    
+    /* Custom styles to match the dashboard in the image */
+    .btn .fas {
+        font-size: 0.9em;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .form-row {
+            flex-direction: column;
+            gap: 0;
+        }
+        
+        .dashboard-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+    }
+</style>
+
+<!-- Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+{% endblock %}

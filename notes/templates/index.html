@@ -1,0 +1,1394 @@
+{% block body %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIT Bhopal Notes</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+        
+        body {
+            background-color: #f3f4f8;
+            color: #2a2a3a;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            padding: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-text {
+            font-weight: 700;
+            font-size: 28px;
+        }
+        
+        .logo-text span:first-child {
+            color: #574DB8;
+        }
+        
+        .logo-text span:last-child {
+            color: #FF5757;
+        }
+        
+        .nav {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-link {
+            text-decoration: none;
+            color: #2a2a3a;
+            font-weight: 500;
+            font-size: 16px;
+            position: relative;
+            padding: 5px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #574DB8;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: #574DB8;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .hero {
+            background: linear-gradient(135deg, #574DB8 0%, #8075E5 100%);
+            color: white;
+            border-radius: 20px;
+            margin: 20px 0;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(87, 77, 184, 0.2);
+        }
+        
+        .hero-content {
+            padding: 60px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            animation: fadeInUp 0.8s forwards;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            max-width: 600px;
+            opacity: 0;
+            animation: fadeInUp 0.8s 0.2s forwards;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+            opacity: 0;
+            animation: fadeInUp 0.8s 0.4s forwards;
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+        }
+        
+        .btn-primary {
+            background: #FF5757;
+            color: white;
+            box-shadow: 0 5px 15px rgba(255, 87, 87, 0.3);
+        }
+        
+        .btn-primary:hover {
+            background: #ff4141;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 87, 87, 0.4);
+        }
+        
+        .btn-light {
+            background: white;
+            color: #574DB8;
+        }
+        
+        .btn-light:hover {
+            background: #f1f1f1;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .hero-shapes {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            opacity: 0.1;
+        }
+        
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            background: white;
+        }
+        
+        .shape-1 {
+            width: 150px;
+            height: 150px;
+            top: -50px;
+            right: 10%;
+        }
+        
+        .shape-2 {
+            width: 80px;
+            height: 80px;
+            bottom: 20%;
+            right: 20%;
+        }
+        
+        .shape-3 {
+            width: 60px;
+            height: 60px;
+            top: 30%;
+            right: 5%;
+        }
+        
+        .shape-4 {
+            width: 200px;
+            height: 200px;
+            bottom: -100px;
+            right: 30%;
+        }
+        
+        /* Quote Section Styles */
+        .quote-section {
+            background: white;
+            border-radius: 15px;
+            padding: 40px 0;
+            margin: 40px 0;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(87, 77, 184, 0.1);
+            text-align: center;
+        }
+        
+        .quote-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .quote-slider {
+            position: relative;
+            height: 120px;
+        }
+        
+        .quote {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            font-size: 1.5rem;
+            font-weight: 500;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+            padding: 0 30px;
+        }
+        
+        .quote.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .quote .highlight {
+            color: #574DB8;
+            font-weight: 600;
+        }
+        
+        .quote .accent {
+            color: #FF5757;
+            font-weight: 600;
+        }
+        
+        .quote-author {
+            display: block;
+            margin-top: 15px;
+            font-size: 1rem;
+            font-style: italic;
+            color: #666;
+        }
+        
+        .quote-nav {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+            gap: 8px;
+        }
+        
+        .quote-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .quote-dot.active {
+            background: #574DB8;
+            transform: scale(1.2);
+        }
+        
+        .quote-controls {
+            display: flex;
+            justify-content: center;
+            margin-top: 25px;
+            gap: 15px;
+        }
+        
+        .quote-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: white;
+            border: 2px solid #574DB8;
+            color: #574DB8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 18px;
+        }
+        
+        .quote-btn:hover {
+            background: #574DB8;
+            color: white;
+        }
+        
+        .quote-shapes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        
+        .quote-shape {
+            position: absolute;
+            border-radius: 50%;
+        }
+        
+        .quote-shape-1 {
+            width: 100px;
+            height: 100px;
+            background: rgba(87, 77, 184, 0.05);
+            top: -30px;
+            left: 10%;
+        }
+        
+        .quote-shape-2 {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 87, 87, 0.05);
+            bottom: -20px;
+            right: 15%;
+        }
+        
+        .quote-shape-3 {
+            width: 60px;
+            height: 60px;
+            background: rgba(87, 77, 184, 0.05);
+            top: 40%;
+            right: 5%;
+        }
+        
+        .quote-shape-4 {
+            width: 120px;
+            height: 120px;
+            background: rgba(255, 87, 87, 0.05);
+            bottom: 20%;
+            left: 5%;
+        }
+        
+        .quote-icon {
+            position: absolute;
+            font-size: 100px;
+            color: rgba(87, 77, 184, 0.05);
+            line-height: 1;
+            z-index: 1;
+        }
+        
+        .quote-icon-left {
+            top: 20px;
+            left: 40px;
+        }
+        
+        .quote-icon-right {
+            bottom: 20px;
+            right: 40px;
+            transform: rotate(180deg);
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            position: relative;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s forwards;
+        }
+        
+        .feature-card:nth-child(1) {
+            animation-delay: 0.8s;
+        }
+        
+        .feature-card:nth-child(2) {
+            animation-delay: 1s;
+        }
+        
+        .feature-card:nth-child(3) {
+            animation-delay: 1.2s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #574DB8, #8075E5);
+        }
+        
+        .feature-card:nth-child(2)::before {
+            background: linear-gradient(90deg, #FF5757, #FF8A8A);
+        }
+        
+        .feature-card:nth-child(3)::before {
+            background: linear-gradient(90deg, #44C97D, #7CF0B3);
+        }
+        
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            margin: 30px auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 28px;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:nth-child(1) .feature-icon {
+            background: rgba(87, 77, 184, 0.1);
+            color: #574DB8;
+        }
+        
+        .feature-card:nth-child(2) .feature-icon {
+            background: rgba(255, 87, 87, 0.1);
+            color: #FF5757;
+        }
+        
+        .feature-card:nth-child(3) .feature-icon {
+            background: rgba(68, 201, 125, 0.1);
+            color: #44C97D;
+        }
+        
+        .feature-content {
+            padding: 20px 30px 30px;
+            text-align: center;
+        }
+        
+        .feature-card h3 {
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .feature-card p {
+            color: #666;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+        
+        .feature-link {
+            display: inline-block;
+            color: #574DB8;
+            font-weight: 600;
+            text-decoration: none;
+            padding: 5px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:nth-child(2) .feature-link {
+            color: #FF5757;
+        }
+        
+        .feature-card:nth-child(3) .feature-link {
+            color: #44C97D;
+        }
+        
+        .feature-link:hover {
+            transform: translateX(5px);
+        }
+        
+        .testimonials {
+            background: #574DB8;
+            padding: 60px 0;
+            margin: 60px 0;
+            border-radius: 20px;
+            color: white;
+            text-align: center;
+            opacity: 0;
+            animation: fadeIn 0.8s 1.4s forwards;
+        }
+        
+        .testimonials h2 {
+            font-size: 2rem;
+            margin-bottom: 40px;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #FFF, #E0E0FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .stat-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        footer {
+            background: #2a2a3a;
+            color: white;
+            padding: 40px 0;
+            margin-top: 60px;
+            text-align: center;
+        }
+        
+        .footer-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .copyright {
+            margin-top: 20px;
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .hero-content {
+                padding: 40px 30px;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .quote-slider {
+                height: 150px;
+            }
+            
+            .quote {
+                font-size: 1.3rem;
+                padding: 0 20px;
+            }
+            
+            .quote-icon {
+                font-size: 70px;
+            }
+            
+            .quote-icon-left {
+                top: 10px;
+                left: 20px;
+            }
+            
+            .quote-icon-right {
+                bottom: 10px;
+                right: 20px;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 30px;
+            }
+            
+            .nav {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .quote-slider {
+                height: 180px;
+            }
+            
+            .quote {
+                font-size: 1.1rem;
+                padding: 0 15px;
+            }
+            
+            .quote-controls {
+                margin-top: 15px;
+            }
+            
+            .quote-btn {
+                width: 35px;
+                height: 35px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="logo-text">
+                    <span>VIT</span><span>StudyMates</span>
+                </div>
+            </div>
+            <nav class="nav">
+             
+                <a href="{% url 'login' %}" class="nav-link">Login</a>
+                <a href="{% url 'signup' %}" class="nav-link">Register</a>
+                <a href="{% url  'contact' %} " class="nav-link">Contact us</a>
+
+            </nav>
+        </header>
+        
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Everything a VITian Needs <br>From Notes to Placements.</h1>
+                <p>Your one-stop hub for everything academic at VIT Bhopal.</p>
+                <!-- <div class="hero-buttons">
+                    <a href="#" class="btn btn-light">Get Started</a>
+                    <a href="#" class="btn btn-primary">Login</a>
+                </div> -->
+            </div>
+            <div class="hero-shapes">
+                <div class="shape shape-1"></div>
+                <div class="shape shape-2"></div>
+                <div class="shape shape-3"></div>
+                <div class="shape shape-4"></div>
+            </div>
+        </section>
+        
+
+          
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">📚</div>
+                <div class="feature-content">
+                    <h3>Study Notes</h3>
+                    <p>Grab notes, anytime. No more stressing over missed classes!</p>
+                </div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">📝</div>
+                <div class="feature-content">
+                    <h3>Semester Exams</h3>
+                    <p>Exam Time? Chill, We Got You.
+                        Download semester papers and stay ahead.</p>
+                    
+                </div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">💼</div>
+                <div class="feature-content">
+                    <h3>Placement Help</h3>
+                    <p>Your Shortcut to the Dream Job.
+                        Everything you need to impress, in one place.</p>
+                   
+                </div>
+            </div>
+        </div>
+
+        <section class="quote-section">
+            <div class="quote-inner">
+                <div class="quote-slider">
+                    <div class="quote active">
+                        "Education is not the <span class="highlight">filling of a pail</span>, but the <span class="accent">lighting of a fire</span>."
+                        <span class="quote-author">— William Butler Yeats</span>
+                    </div>
+                    
+                    <div class="quote">
+                        "The beautiful thing about <span class="highlight">learning</span> is that no one can <span class="accent">take it away from you</span>."
+                        <span class="quote-author">— B.B. King</span>
+                    </div>
+                    
+                    <div class="quote">
+                        "Success is not final, failure is not fatal: it is the <span class="highlight">courage to continue</span> that <span class="accent">counts</span>."
+                        <span class="quote-author">— Winston Churchill</span>
+                    </div>
+                    
+                    <div class="quote">
+                        "<span class="highlight">Strive for progress</span>, not <span class="accent">perfection</span>."
+                        <span class="quote-author">— Unknown</span>
+                    </div>
+                    
+                    <div class="quote">
+                        "The roots of <span class="accent">education</span> are bitter, but the <span class="highlight">fruit is sweet</span>."
+                        <span class="quote-author">— Aristotle</span>
+                    </div>
+                    
+                    <div class="quote">
+                        "Your <span class="highlight">passion</span> is waiting for your <span class="accent">courage</span> to catch up."
+                        <span class="quote-author">— Isabelle Lafleche</span>
+                    </div>
+                </div>
+                
+                <div class="quote-nav"></div>
+                
+                <div class="quote-controls">
+                    <div class="quote-btn prev-quote">❮</div>
+                    <div class="quote-btn next-quote">❯</div>
+                </div>
+            </div>
+            
+            <div class="quote-shapes">
+                <div class="quote-shape quote-shape-1"></div>
+                <div class="quote-shape quote-shape-2"></div>
+                <div class="quote-shape quote-shape-3"></div>
+                <div class="quote-shape quote-shape-4"></div>
+            </div>
+            
+            <div class="quote-icon quote-icon-left">"</div>
+            <div class="quote-icon quote-icon-right">"</div>
+        </section>
+       
+        
+   
+    </div>
+    
+    <footer class="minimalist-footer">
+        <div class="footer-content">
+            <p class="footer-tagline"><span class="vit-text">VITStudyMates</span> - <span class="tagline-text">Everything a VITian Needs</span></p>
+        </div>
+    </footer>
+    
+    <style>
+    .minimalist-footer {
+        background: linear-gradient(135deg, #574DB8 0%, #574DB8 100%);
+        color: white;
+        padding: 30px 0;
+        margin-top: 60px;
+        text-align: center;
+        border-radius: 20px 20px 0 0;
+        box-shadow: 0 -10px 30px #574DB8(87, 77, 184, 0.1);
+        position: relative;
+    }
+    
+    .minimalist-footer::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: linear-gradient(90deg, #574DB8, #FF5757);
+    }
+    
+    .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+    
+    .footer-tagline {
+        font-size: 18px;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+    }
+    
+    .vit-text {
+        color: #FF5757;
+        font-weight: 700;
+    }
+    
+    .tagline-text {
+        color: #e0e0e0;
+    }
+    
+    @media (max-width: 768px) {
+        .footer-tagline {
+            font-size: 16px;
+        }
+    }
+    </style>
+    
+
+
+
+
+
+
+
+
+    <!-- Back to Top Button -->
+<a href="#" class="back-to-top">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18 15l-6-6-6 6"/>
+    </svg>
+</a>
+
+<style>
+.back-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    background-color: #574DB8;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(87, 77, 184, 0.25);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.back-to-top:hover {
+    background-color: #6F65C9;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px rgba(87, 77, 184, 0.3);
+}
+
+.back-to-top.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+@media (max-width: 768px) {
+    .back-to-top {
+        width: 40px;
+        height: 40px;
+        bottom: 20px;
+        right: 20px;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const backToTopButton = document.querySelector('.back-to-top');
+    
+    // Show/hide button based on scroll position
+    window.addEventListener('scroll', function() {
+        if (window.pageYOffset > 300) {
+            backToTopButton.classList.add('visible');
+        } else {
+            backToTopButton.classList.remove('visible');
+        }
+    });
+    
+    // Smooth scroll to top when clicked
+    backToTopButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+});
+</script>
+    <script>
+        // Add intersection observer for better animation triggers
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        // Observe feature cards
+        document.querySelectorAll('.feature-card, .testimonials').forEach(element => {
+            element.style.animationPlayState = 'paused';
+            observer.observe(element);
+        });
+        
+        // Add count animation to stats
+        const statNumbers = document.querySelectorAll('.stat-number');
+        
+        statNumbers.forEach(stat => {
+            const finalValue = parseInt(stat.textContent);
+            stat.textContent = '0';
+            
+            const counterObserver = new IntersectionObserver((entries) => {
+                if (entries[0].isIntersecting) {
+                    let currentValue = 0;
+                    const duration = 2000;
+                    const increment = finalValue / (duration / 16);
+                    
+                    const timer = setInterval(() => {
+                        currentValue += increment;
+                        if (currentValue >= finalValue) {
+                            stat.textContent = finalValue + '+';
+                            clearInterval(timer);
+                        } else {
+                            stat.textContent = Math.floor(currentValue) + '+';
+                        }
+                    }, 16);
+                    
+                    counterObserver.unobserve(entries[0].target);
+                }
+            }, { threshold: 0.5 });
+            
+            counterObserver.observe(stat);
+        });
+        
+        // Quote slider functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const quotes = document.querySelectorAll('.quote');
+            const quoteNav = document.querySelector('.quote-nav');
+            const prevBtn = document.querySelector('.prev-quote');
+            const nextBtn = document.querySelector('.next-quote');
+            let currentIndex = 0;
+            let interval;
+            
+            // Create navigation dots
+            quotes.forEach((_, index) => {
+                const dot = document.createElement('div');
+                dot.classList.add('quote-dot');
+                if (index === 0) dot.classList.add('active');
+                
+                dot.addEventListener('click', () => {
+                    showQuote(index);
+                    resetInterval();
+                });
+                
+                quoteNav.appendChild(dot);
+            });
+            
+            // Function to show a specific quote
+            function showQuote(index) {
+                quotes.forEach(quote => quote.classList.remove('active'));
+                document.querySelectorAll('.quote-dot').forEach(dot => dot.classList.remove('active'));
+                
+                quotes[index].classList.add('active');
+                document.querySelectorAll('.quote-dot')[index].classList.add('active');
+                currentIndex = index;
+            }
+            
+            // Function to show the next quote
+            function nextQuote() {
+                currentIndex = (currentIndex + 1) % quotes.length;
+                showQuote(currentIndex);
+            }
+            
+            // Function to show the previous quote
+            function prevQuote() {
+                currentIndex = (currentIndex - 1 + quotes.length) % quotes.length;
+                showQuote(currentIndex);
+            }
+            
+            // Function to reset the interval
+            function resetInterval() {
+                clearInterval(interval);
+                interval = setInterval(nextQuote, 5000);
+            }
+            
+            // Add event listeners to buttons
+            nextBtn.addEventListener('click', () => {
+                nextQuote();
+                resetInterval();
+            });
+            
+            prevBtn.addEventListener('click', () => {
+                prevQuote();
+                resetInterval();
+            });
+            
+            // Start the rotation
+            resetInterval();
+            
+            // Pause rotation on hover
+            document.querySelector('.quote-slider').addEventListener('mouseenter', () => {
+                clearInterval(interval);
+            });
+            
+            // Resume rotation on mouse leave
+            document.querySelector('.quote-slider').addEventListener('mouseleave', () => {
+                resetInterval();
+            });
+            
+            // Handle visibility change
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) {
+                    clearInterval(interval);
+                } else {
+                    resetInterval();
+                }
+            });
+            
+            // Make sure quote slider height is appropriate
+            function updateQuoteSliderHeight() {
+                const activeQuote = document.querySelector('.quote.active');
+                if (activeQuote) {
+                    const quoteHeight = activeQuote.offsetHeight;
+                    document.querySelector('.quote-slider').style.height = `${quoteHeight}px`;
+                }
+            }
+            
+            // Update height on resize
+            window.addEventListener('resize', updateQuoteSliderHeight);
+            
+            // Initial height update
+            setTimeout(updateQuoteSliderHeight, 100);
+        });
+    </script>
+
+
+
+
+
+
+<!-- Popup Overlay -->
+<div class="reward-popup-overlay" id="rewardPopup">
+    <div class="reward-popup">
+      <div class="reward-popup-close" onclick="closePopup(false)">×</div>
+      
+      <div class="reward-header">
+        <div class="reward-icon">🏆</div>
+        <h2>Win Amazing Prizes!</h2>
+      </div>
+      
+      <div class="reward-content">
+        <p>Become a <span class="highlight-text">VITStudyMates</span> Dashboard Topper and win tech gadgets!</p>
+        
+        <div class="reward-tiers">
+          <div class="reward-tier">
+            <div class="reward-medal gold">1<sup>st</sup></div>
+            <div class="reward-tier-details">
+              <h3>First Place</h3>
+              <p>Premium Smartwatch</p>
+            </div>
+          </div>
+          
+          <div class="reward-tier">
+            <div class="reward-medal silver">2<sup>nd</sup></div>
+            <div class="reward-tier-details">
+              <h3>Second Place</h3>
+              <p>Wireless Earbuds</p>
+            </div>
+          </div>
+          
+          <div class="reward-tier">
+            <div class="reward-medal bronze">3<sup>rd</sup></div>
+            <div class="reward-tier-details">
+              <h3>Third Place</h3>
+              <p>Power Bank 10000mAh</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="reward-footer">
+        <div class="reward-actions">
+          <button class="reward-close-btn" onclick="closePopup(false)">Close</button>
+          <button class="reward-dont-show-btn" onclick="closePopup(true)">Don't Show Again</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Add this CSS to your existing styles -->
+  <style>
+  .reward-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+  }
+  
+  .reward-popup-overlay.show {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  .reward-popup {
+    background: white;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    position: relative;
+    transform: translateY(30px);
+    transition: all 0.4s ease;
+  }
+  
+  .reward-popup-overlay.show .reward-popup {
+    transform: translateY(0);
+  }
+  
+  .reward-popup-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 30px;
+    height: 30px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    z-index: 2;
+  }
+  
+  .reward-popup-close:hover {
+    background: rgba(0, 0, 0, 0.2);
+  }
+  
+  .reward-header {
+    background: linear-gradient(135deg, #574DB8 0%, #8075E5 100%);
+    padding: 30px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .reward-header:before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: -20px;
+    right: -20px;
+    height: 10px;
+    background: rgba(255, 255, 255, 0.2);
+    transform: rotate(-5deg);
+    border-radius: 50%;
+  }
+  
+  .reward-icon {
+    font-size: 40px;
+    margin-bottom: 15px;
+    position: relative;
+    animation: float 3s infinite ease-in-out;
+  }
+  
+  .reward-header h2 {
+    color: white;
+    font-size: 24px;
+    margin: 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  .reward-content {
+    padding: 25px 20px;
+  }
+  
+  .reward-content p {
+    text-align: center;
+    font-size: 16px;
+    color: #444;
+    margin-bottom: 25px;
+  }
+  
+  .highlight-text {
+    color: #FF5757;
+    font-weight: 700;
+  }
+  
+  .reward-tiers {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .reward-tier {
+    flex: 1;
+    min-width: 140px;
+    display: flex;
+    align-items: center;
+    background: #f9f9f9;
+    border-radius: 10px;
+    padding: 12px;
+    transition: all 0.2s ease;
+  }
+  
+  .reward-tier:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .reward-medal {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: white;
+    margin-right: 12px;
+    font-size: 16px;
+    position: relative;
+  }
+  
+  .reward-medal sup {
+    font-size: 8px;
+    position: absolute;
+    top: 8px;
+    right: 5px;
+  }
+  
+  .gold {
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    box-shadow: 0 3px 6px rgba(255, 215, 0, 0.3);
+  }
+  
+  .silver {
+    background: linear-gradient(135deg, #C0C0C0 0%, #A9A9A9 100%);
+    box-shadow: 0 3px 6px rgba(192, 192, 192, 0.3);
+  }
+  
+  .bronze {
+    background: linear-gradient(135deg, #CD7F32 0%, #A05129 100%);
+    box-shadow: 0 3px 6px rgba(205, 127, 50, 0.3);
+  }
+  
+  .reward-tier-details h3 {
+    margin: 0 0 3px 0;
+    font-size: 14px;
+    color: #333;
+  }
+  
+  .reward-tier-details p {
+    margin: 0;
+    font-size: 12px;
+    color: #666;
+  }
+  
+  .reward-footer {
+    padding: 0 20px 25px;
+  }
+  
+  .reward-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+  }
+  
+  .reward-close-btn, .reward-dont-show-btn {
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    flex: 1;
+  }
+  
+  .reward-close-btn {
+    background: #f0f0f0;
+    color: #444;
+  }
+  
+  .reward-dont-show-btn {
+    background: linear-gradient(135deg, #574DB8 0%, #8075E5 100%);
+    color: white;
+    box-shadow: 0 5px 15px rgba(87, 77, 184, 0.3);
+  }
+  
+  .reward-close-btn:hover, .reward-dont-show-btn:hover {
+    transform: translateY(-3px);
+  }
+  
+  .reward-close-btn:hover {
+    background: #e5e5e5;
+  }
+  
+  .reward-dont-show-btn:hover {
+    box-shadow: 0 8px 20px rgba(87, 77, 184, 0.4);
+  }
+  
+  @keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+  }
+  
+  /* Extra animation for prizes */
+  .reward-tier:hover .reward-tier-details p {
+    color: #574DB8;
+    font-weight: 500;
+  }
+  
+  /* Responsive Adjustments */
+  @media (max-width: 600px) {
+    .reward-tiers {
+      flex-direction: column;
+    }
+    
+    .reward-tier {
+      width: 100%;
+    }
+    
+    .reward-actions {
+      flex-direction: column;
+    }
+  }
+  </style>
+  
+  <!-- Add this JavaScript to handle the popup display logic -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Only prevent showing if user clicked "Don't Show Again"
+      const dontShowAgain = localStorage.getItem('dontShowRewardPopup');
+    
+      if (!dontShowAgain) {
+        setTimeout(function () {
+          showPopup();
+        }, 5000); // Show after 5 seconds
+      }
+    });
+    
+    function showPopup() {
+      const popup = document.getElementById('rewardPopup');
+      popup.classList.add('show');
+      document.body.style.overflow = 'hidden'; // Prevent background scroll
+    }
+    
+    function closePopup(dontShowForever) {
+      const popup = document.getElementById('rewardPopup');
+      popup.classList.remove('show');
+      document.body.style.overflow = ''; // Restore background scroll
+    
+      // If "Don't Show Again" is clicked
+      if (dontShowForever) {
+        localStorage.setItem('dontShowRewardPopup', 'true');
+      }
+    }
+    </script>
+    
+</body>
+</html>
+{% endblock %}

@@ -1,0 +1,798 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ note_request.title }} | Note Requests{% endblock %}
+
+{% block extra_css %}
+<style>
+/* General Layout */
+.dashboard-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 30px 15px;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Header Area */
+.site-header {
+    background: linear-gradient(135deg, #7c4dff, #5e35b1);
+    color: white;
+    padding: 15px 0;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.site-header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.site-logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+.site-logo i {
+    margin-right: 8px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 20px;
+}
+
+.nav-link {
+    color: rgba(255,255,255,0.9);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+    color: white;
+    transform: translateY(-2px);
+}
+
+.nav-link i {
+    margin-right: 5px;
+}
+
+.user-menu {
+    position: relative;
+}
+
+.user-dropdown {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    position: absolute;
+    right: 0;
+    top: 100%;
+    width: 200px;
+    z-index: 100;
+    margin-top: 5px;
+    overflow: hidden;
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+}
+
+.user-menu:hover .user-dropdown {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.dropdown-item {
+    padding: 12px 15px;
+    color: #333;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    transition: all 0.2s;
+}
+
+.dropdown-item:hover {
+    background: #f5f5f5;
+}
+
+.dropdown-item i {
+    margin-right: 10px;
+    color: #5e35b1;
+}
+
+/* Dashboard Header */
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.page-title {
+    margin: 0;
+}
+
+.page-title h1 {
+    font-size: 1.8rem;
+    margin: 0 0 5px;
+    display: flex;
+    align-items: center;
+}
+
+.page-title h1 i {
+    margin-right: 10px;
+    color: #5e35b1;
+}
+
+.page-title p {
+    color: #666;
+    margin: 0;
+}
+
+/* Thread Detail */
+.thread-detail {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    overflow: hidden;
+}
+
+.thread-detail-header {
+    padding: 20px 25px;
+    border-bottom: 1px solid #eee;
+}
+
+.thread-detail-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.thread-detail-title h2 {
+    font-size: 1.5rem;
+    margin: 0;
+    color: #333;
+}
+
+.thread-status {
+    padding: 6px 15px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.status-open {
+    background-color: rgba(46, 204, 113, 0.15);
+    color: #27ae60;
+}
+
+.status-closed {
+    background-color: rgba(52, 152, 219, 0.15);
+    color: #2980b9;
+}
+
+.thread-detail-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.thread-detail-meta span {
+    display: flex;
+    align-items: center;
+}
+
+.thread-detail-meta i {
+    margin-right: 6px;
+    color: #5e35b1;
+}
+
+/* Message Container */
+.message-container {
+    padding: 25px;
+}
+
+.message {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.message:last-child {
+    margin-bottom: 0;
+}
+
+.message-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #5e35b1;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.message-content {
+    flex-grow: 1;
+}
+
+.message-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.message-author {
+    font-weight: 600;
+    color: #333;
+}
+
+.message-time {
+    color: #999;
+    font-size: 0.85rem;
+}
+
+.message-text {
+    color: #444;
+    line-height: 1.6;
+}
+
+.message-text p:last-child {
+    margin-bottom: 0;
+}
+
+/* File Attachments */
+.message-files {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.message-file {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+}
+
+.message-file-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background-color: #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #5e35b1;
+    font-size: 1.2rem;
+}
+
+.message-file-details {
+    flex-grow: 1;
+}
+
+.message-file-name {
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 4px;
+    word-break: break-word;
+}
+
+.message-file-meta {
+    color: #999;
+    font-size: 0.85rem;
+}
+
+.message-file-actions {
+    display: flex;
+    gap: 15px;
+}
+
+.message-file-actions a {
+    color: #5e35b1;
+    font-size: 1.1rem;
+    transition: all 0.2s;
+}
+
+.message-file-actions a:hover {
+    color: #7c4dff;
+}
+
+/* Reply Form */
+.reply-form {
+    padding: 25px;
+    border-top: 1px solid #eee;
+    background-color: #f8f9fa;
+}
+
+.reply-form .form-group {
+    margin-bottom: 15px;
+}
+
+.reply-form textarea {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    resize: vertical;
+    min-height: 120px;
+    font-family: inherit;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.reply-form textarea:focus {
+    border-color: #5e35b1;
+    box-shadow: 0 0 0 3px rgba(94, 53, 177, 0.1);
+    outline: none;
+}
+
+.reply-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.file-upload-btn {
+    position: relative;
+    overflow: hidden;
+}
+
+.file-upload-btn input[type="file"] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.btn {
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.btn i {
+    margin-right: 8px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #7c4dff, #5e35b1);
+    color: white;
+    border: none;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #6a40e3, #5029a0);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(94, 53, 177, 0.2);
+}
+
+.btn-outline-primary {
+    border: 2px solid #5e35b1;
+    color: #5e35b1;
+    background: transparent;
+}
+
+.btn-outline-primary:hover {
+    background: rgba(94, 53, 177, 0.1);
+    transform: translateY(-2px);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    color: white;
+    border: none;
+}
+
+.btn-success:hover {
+    background: linear-gradient(135deg, #27ae60, #219653);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(46, 204, 113, 0.2);
+}
+
+.btn-warning {
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+    color: white;
+    border: none;
+}
+
+.btn-warning:hover {
+    background: linear-gradient(135deg, #e67e22, #d35400);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(243, 156, 18, 0.2);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .thread-detail-title {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .reply-buttons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Animation effects */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.thread-detail {
+    animation: fadeIn 0.5s ease forwards;
+}
+
+.message {
+    opacity: 0;
+    animation: fadeIn 0.5s ease forwards;
+}
+
+.message:nth-child(1) { animation-delay: 0.1s; }
+.message:nth-child(2) { animation-delay: 0.2s; }
+.message:nth-child(3) { animation-delay: 0.3s; }
+.message:nth-child(4) { animation-delay: 0.4s; }
+.message:nth-child(5) { animation-delay: 0.5s; }
+
+/* Notification styles */
+.notification {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    padding: 15px 20px;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    max-width: 350px;
+}
+
+.notification.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.notification.success {
+    border-left: 5px solid #2ecc71;
+}
+
+.notification.error {
+    border-left: 5px solid #e74c3c;
+}
+
+.notification i {
+    font-size: 1.5rem;
+}
+
+.notification.success i {
+    color: #2ecc71;
+}
+
+.notification.error i {
+    color: #e74c3c;
+}
+
+.notification span {
+    color: #333;
+    font-weight: 500;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <div class="page-title">
+            <h1><i class="fas fa-comments"></i> Note Request</h1>
+            <p>Viewing request details and replies</p>
+        </div>
+        <div>
+            <a href="{% url 'note_requests_list' %}" class="btn btn-outline-primary">
+                <i class="fas fa-arrow-left"></i> Back to Requests
+            </a>
+            <a href="{% url 'browse_notes' %}" class="btn btn-primary">
+                <i class="fas fa-book-open"></i> Browse Notes
+            </a>
+        </div>
+    </div>
+    
+    <!-- Thread Detail View -->
+    <div class="thread-detail">
+        <div class="thread-detail-header">
+            <div class="thread-detail-title">
+                <h2>{{ note_request.title }}</h2>
+                <span class="thread-status {% if note_request.status == 'open' %}status-open{% else %}status-closed{% endif %}">
+                    {% if note_request.status == 'open' %}<i class="fas fa-folder-open"></i>{% else %}<i class="fas fa-check-circle"></i>{% endif %}
+                    {{ note_request.status|title }}
+                </span>
+            </div>
+            <div class="thread-detail-meta">
+                {% if note_request.course_code %}
+                <span><i class="fas fa-hashtag"></i> {{ note_request.course_code }}</span>
+                {% endif %}
+                {% if note_request.course_name %}
+                <span><i class="fas fa-bookmark"></i> {{ note_request.course_name }}</span>
+                {% endif %}
+                <span><i class="fas fa-user"></i> {{ note_request.user.username }}</span>
+                <span><i class="fas fa-calendar-alt"></i> {{ note_request.created_at|date:"F d, Y" }}</span>
+                <span><i class="fas fa-comment-alt"></i> {{ note_request.reply_count }} {% if note_request.reply_count == 1 %}reply{% else %}replies{% endif %}</span>
+            </div>
+        </div>
+        
+        <div class="message-container">
+            <!-- Original request -->
+            <div class="message">
+                <div class="message-avatar">
+                    {{ note_request.user.username|first|upper }}
+                </div>
+                <div class="message-content">
+                    <div class="message-header">
+                        <span class="message-author">{{ note_request.user.username }}</span>
+                        <span class="message-time">{{ note_request.created_at|date:"F d, Y g:i A" }}</span>
+                    </div>
+                    <div class="message-text">
+                        {{ note_request.description|linebreaks }}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Replies -->
+            {% for reply in replies %}
+            <div class="message">
+                <div class="message-avatar">
+                    {{ reply.user.username|first|upper }}
+                </div>
+                <div class="message-content">
+                    <div class="message-header">
+                        <span class="message-author">{{ reply.user.username }}</span>
+                        <span class="message-time">{{ reply.created_at|date:"F d, Y g:i A" }}</span>
+                    </div>
+                    <div class="message-text">
+                        {{ reply.content|linebreaks }}
+                    </div>
+                    
+                    {% if reply.files.all %}
+                    <div class="message-files">
+                        {% for file in reply.files.all %}
+                        <div class="message-file">
+                            <div class="message-file-icon">
+                                {% if file.file_extension == 'pdf' %}
+                                <i class="fas fa-file-pdf"></i>
+                                {% elif file.file_extension == 'doc' or file.file_extension == 'docx' %}
+                                <i class="fas fa-file-word"></i>
+                                {% elif file.file_extension == 'xls' or file.file_extension == 'xlsx' %}
+                                <i class="fas fa-file-excel"></i>
+                                {% elif file.file_extension == 'jpg' or file.file_extension == 'jpeg' or file.file_extension == 'png' %}
+                                <i class="fas fa-file-image"></i>
+                                {% else %}
+                                <i class="fas fa-file"></i>
+                                {% endif %}
+                            </div>
+                            <div class="message-file-details">
+                                <div class="message-file-name">{{ file.filename }}</div>
+                                <div class="message-file-meta">{{ file.file_size_kb }} KB • {{ file.uploaded_at|date:"F d, Y" }}</div>
+                            </div>
+                            <div class="message-file-actions">
+                                <a href="{{ file.file.url }}" download="{{ file.filename }}" title="Download">
+                                    <i class="fas fa-download"></i>
+                                </a>
+                                <a href="{{ file.file.url }}" target="_blank" title="View">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Action buttons for request owner -->
+        {% if user.is_authenticated and user == note_request.user %}
+            <div class="px-4 pb-3 text-center">
+                {% if note_request.status == 'open' %}
+                    <a href="{% url 'mark_as_solved' note_request.pk %}" class="btn btn-success">
+                        <i class="fas fa-check-circle"></i> Mark as Solved
+                    </a>
+                {% else %}
+                    <a href="{% url 'reopen_request' note_request.pk %}" class="btn btn-warning">
+                        <i class="fas fa-folder-open"></i> Reopen Request
+                    </a>
+                {% endif %}
+            </div>
+        {% endif %}
+        
+        <!-- Reply Form -->
+        {% if user.is_authenticated %}
+            <div class="reply-form">
+                <form method="post" action="{% url 'add_reply' note_request.pk %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        {{ reply_form.content }}
+                    </div>
+                    <div class="reply-buttons">
+                        <div class="file-upload-btn btn btn-outline-primary">
+                            <i class="fas fa-paperclip"></i> Attach Notes
+                            <input type="file" name="file" multiple id="notesFile">
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i> Send Reply
+                        </button>
+                    </div>
+                </form>
+            </div>
+        {% else %}
+            <div class="reply-form text-center">
+                <p>Please <a href="{% url 'login' %}">log in</a> to reply to this request.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+$(document).ready(function() {
+    // Show selected filename
+    $('#notesFile').change(function() {
+        var files = $(this)[0].files;
+        var fileNames = [];
+        
+        for (var i = 0; i < files.length; i++) {
+            fileNames.push(files[i].name);
+        }
+        
+        if (fileNames.length > 0) {
+            var text = fileNames.length === 1 ? 
+                fileNames[0] : 
+                fileNames.length + ' files selected';
+                
+            $(this).closest('.file-upload-btn').attr('title', fileNames.join(', '));
+            $(this).closest('.file-upload-btn').append('<span class="selected-files">' + text + '</span>');
+        }
+    });
+    
+    // AJAX for marking as solved
+    $('a[href^="{% url 'mark_as_solved' 0 %}"]').click(function(e) {
+        e.preventDefault();
+        var url = $(this).attr('href');
+        
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: {
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function(response) {
+                // Update the status without refreshing
+                $('.thread-status')
+                    .removeClass('status-open')
+                    .addClass('status-closed')
+                    .html('<i class="fas fa-check-circle"></i> Solved');
+                    
+                // Replace the button with "Reopen Request"
+                var reopenUrl = "{% url 'reopen_request' note_request.pk %}";
+                var reopenBtn = '<a href="' + reopenUrl + '" class="btn btn-warning"><i class="fas fa-folder-open"></i> Reopen Request</a>';
+                
+                $('.btn-success').closest('div').html(reopenBtn);
+                
+                // Show success notification
+                showNotification('Request marked as solved!', 'success');
+            },
+            error: function() {
+                showNotification('An error occurred. Please try again.', 'error');
+            }
+        });
+    });
+    
+    // AJAX for reopening request
+    $('a[href^="{% url 'reopen_request' 0 %}"]').click(function(e) {
+        e.preventDefault();
+        var url = $(this).attr('href');
+        
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: {
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function(response) {
+                // Update the status without refreshing
+                $('.thread-status')
+                    .removeClass('status-closed')
+                    .addClass('status-open')
+                    .html('<i class="fas fa-folder-open"></i> Open');
+                    
+                // Replace the button with "Mark as Solved"
+                var solveUrl = "{% url 'mark_as_solved' note_request.pk %}";
+                var solveBtn = '<a href="' + solveUrl + '" class="btn btn-success"><i class="fas fa-check-circle"></i> Mark as Solved</a>';
+                
+                $('.btn-warning').closest('div').html(solveBtn);
+                
+                // Show success notification
+                showNotification('Request reopened!', 'success');
+            },
+            error: function() {
+                showNotification('An error occurred. Please try again.', 'error');
+            }
+        });
+    });
+    
+    // Notification popup function
+    function showNotification(message, type) {
+        var notifClass = type === 'success' ? 'success' : 'error';
+        var icon = type === 'success' ? 'check-circle' : 'exclamation-circle';
+        
+        var notification = $('<div class="notification ' + notifClass + '">' +
+                           '<i class="fas fa-' + icon + '"></i>' +
+                           '<span>' + message + '</span>' +
+                           '</div>');
+        
+        $('body').append(notification);
+        
+        setTimeout(function() {
+            notification.addClass('show');
+        }, 100);
+        
+        setTimeout(function() {
+            notification.removeClass('show');
+            setTimeout(function() {
+                notification.remove();
+            }, 500);
+        }, 3000);
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,681 @@
+{% extends 'user_navigation.html' %}
+{% load static %}
+
+{% block title %}Upload Notes{% endblock %}
+
+{% block body %}
+<!-- Header -->
+<header>
+    <div class="logo">
+        <div class="logo-text">
+            <a href="{% url 'index' %}">
+                <span>VIT</span><span>StudyMates</span>
+            </a>
+        </div>
+    </div>
+    
+    <div class="profile-section">
+        <div class="action-buttons">
+            <a href="{% url 'notes_dashboard' %}" class="header-btn back-btn">
+                <i class="fas fa-arrow-left"></i>
+                 Go Back 
+            </a>
+        </div>
+    </div>
+</header>
+
+<div class="dashboard-container">
+    {% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endfor %}
+{% endif %}
+    <div class="row">
+        <div class="col-md-8">
+            <div class="notes-upload-section">
+                <div class="card">
+                    <div class="card-header card-header-gradient">
+                        <h3><i class="fas fa-upload"></i> Upload New Notes</h3>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            
+                            <div class="form-group">
+                                <label for="{{ form.title.id_for_label }}"><i class="fas fa-heading"></i> Title</label>
+                                {{ form.title }}
+                                {% if form.title.errors %}
+                                    <div class="text-danger">{{ form.title.errors }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="form-group mt-4">
+                                <label for="{{ form.description.id_for_label }}"><i class="fas fa-align-left"></i> Description</label>
+                                {{ form.description }}
+                                {% if form.description.errors %}
+                                    <div class="text-danger">{{ form.description.errors }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="row mt-4">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="{{ form.course_code.id_for_label }}"><i class="fas fa-hashtag"></i> Course Code</label>
+                                        {{ form.course_code }}
+                                        {% if form.course_code.errors %}
+                                            <div class="text-danger">{{ form.course_code.errors }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="{{ form.course_name.id_for_label }}"><i class="fas fa-book"></i> Course Name</label>
+                                        {{ form.course_name }}
+                                        {% if form.course_name.errors %}
+                                            <div class="text-danger">{{ form.course_name.errors }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group mt-4">
+                                <label for="{{ form.file.id_for_label }}"><i class="fas fa-file-pdf"></i> Upload PDF File</label>
+                                {{ form.file }}
+                                <small class="form-text text-muted">Accepted formats: PDF, DOC, DOCX (Max size: 10MB)</small>
+                                {% if form.file.errors %}
+                                    <div class="text-danger">{{ form.file.errors }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="form-group mt-4">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fas fa-cloud-upload-alt"></i> Upload Notes
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="upload-guidelines">
+                <div class="card mb-4">
+                    <div class="card-header card-header-gradient">
+                        <h3><i class="fas fa-info-circle"></i> Guidelines</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="guidelines-list">
+                            <li><i class="fas fa-check-circle text-success"></i> Notes should be your own original work</li>
+                            <li><i class="fas fa-check-circle text-success"></i> Maximum file size is 10MB</li>
+                            <li><i class="fas fa-check-circle text-success"></i> Only PDF, DOC, and DOCX formats are accepted</li>
+                            <li><i class="fas fa-check-circle text-success"></i> Be sure to provide accurate course information</li>
+                            <li><i class="fas fa-check-circle text-success"></i> Uploads are immediately available to all users</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header card-header-gradient">
+                        <h3><i class="fas fa-trophy"></i> Benefits</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="benefits-list">
+                            <li><i class="fas fa-star text-warning"></i> Earn points for each uploaded note</li>
+                            <li><i class="fas fa-star text-warning"></i> Get recognition in the community</li>
+                            <li><i class="fas fa-star text-warning"></i> Help fellow students in their academic journey</li>
+                            <li><i class="fas fa-star text-warning"></i> Achieve top contributor status</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="recent-uploads mt-5">
+        <div class="card">
+            <div class="card-header card-header-gradient">
+                <h3><i class="fas fa-history"></i> Your Recent Uploads</h3>
+            </div>
+            <div class="card-body">
+                {% if user_notes %}
+                <div class="table-responsive">
+                    <table class="table notes-table">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Course Code</th>
+                                <th>Course Name</th>
+                                <th>Date Uploaded</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for note in user_notes %}
+                            <tr>
+                                <td>{{ note.title }}</td>
+                                <td>{{ note.course_code }}</td>
+                                <td>{{ note.course_name }}</td>
+                                <td>{{ note.uploaded_at|date:"M d, Y" }}</td>
+                                <td>
+                                    <span class="badge badge-success">Available</span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <i class="fas fa-file-alt fa-4x text-muted mb-3"></i>
+                    <p class="lead">You haven't uploaded any notes yet.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="minimalist-footer">
+    <div class="footer-content">
+        <p class="footer-tagline"><span class="vit-text">VITStudyMates</span> - <span class="tagline-text">Everything a VITian Needs</span></p>
+    </div>
+</footer>
+
+<!-- Popup Alert -->
+<div class="popup-overlay" id="popupOverlay" style="display: none;">
+    <div class="popup-content">
+        <div class="popup-icon" id="popupIcon"></div>
+        <div class="popup-message" id="popupMessage"></div>
+        <button class="btn btn-primary popup-button" onclick="closePopup()">OK</button>
+    </div>
+</div>
+
+<style>
+    /* Base styles */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Outfit', sans-serif;
+    }
+
+    body {
+        background-color: #ffffff;
+        color: #2a2a3a;
+        min-height: 100vh;
+    }
+
+    /* Header styles */
+    header {
+        padding: 20px 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(224, 224, 224, 0.5);
+        margin-bottom: 30px;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        transition: all 0.3s ease;
+    }
+
+    .back-btn {
+        background: #FF5757;
+        box-shadow: 0 4px 12px rgba(255, 87, 87, 0.2);
+    }
+
+    .back-btn:hover {
+        background: #ff3c3c;
+        box-shadow: 0 6px 15px rgba(255, 87, 87, 0.3);
+    }
+
+    .header-btn {
+        padding: 10px 20px;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: none;
+        color: white;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .header-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    }
+
+    .logo-text {
+        font-weight: 700;
+        font-size: 28px;
+    }
+
+    .logo-text a {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .logo-text span:first-child {
+        color: #574DB8;
+    }
+
+    .logo-text span:last-child {
+        color: #FF5757;
+    }
+    
+    /* Dashboard container */
+    .dashboard-container {
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    /* Card styles */
+    .card {
+        border-radius: 12px;
+        overflow: hidden;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        border: none;
+    }
+    
+    .card-header-gradient {
+        background: linear-gradient(135deg, #8A70FF 0%, #6B53F7 100%);
+        color: white;
+        padding: 15px 20px;
+    }
+    
+    .card-header-gradient h3 {
+        margin: 0;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .card-header-gradient h3 i {
+        margin-right: 10px;
+    }
+    
+    .card-body {
+        background: white;
+        padding: 25px;
+    }
+    
+    /* Form styles */
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: #2c3e50;
+    }
+    
+    .form-control, input[type="text"], input[type="file"], textarea, select {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 16px;
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    
+    .form-control:focus, input[type="text"]:focus, textarea:focus, select:focus {
+        border-color: #7B68EE;
+        box-shadow: 0 0 0 3px rgba(123, 104, 238, 0.2);
+        outline: none;
+    }
+    
+    textarea {
+        min-height: 120px;
+        resize: vertical;
+    }
+    
+    .text-danger {
+        color: #e74c3c;
+        font-size: 14px;
+        margin-top: 5px;
+    }
+    
+    .text-muted {
+        color: #7f8c8d;
+        font-size: 14px;
+        margin-top: 5px;
+    }
+    
+    /* Button styles */
+    .btn {
+        padding: 12px 20px;
+        border-radius: 6px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .btn i {
+        margin-right: 8px;
+    }
+    
+    .btn-primary {
+        background-color: #7B68EE;
+        color: white;
+        border: none;
+    }
+    
+    .btn-primary:hover {
+        background-color: #6A5ACD;
+        transform: translateY(-1px);
+    }
+    
+    .btn-primary:active {
+        transform: translateY(0);
+    }
+    
+    /* List styles */
+    .guidelines-list,
+    .benefits-list {
+        list-style-type: none;
+        padding-left: 0;
+        margin-bottom: 0;
+    }
+    
+    .guidelines-list li,
+    .benefits-list li {
+        padding: 8px 0;
+        display: flex;
+        align-items: center;
+        font-size: 15px;
+    }
+    
+    .guidelines-list li i,
+    .benefits-list li i {
+        margin-right: 10px;
+        font-size: 16px;
+        flex-shrink: 0;
+    }
+    
+    /* Table styles */
+    .table-responsive {
+        overflow-x: auto;
+    }
+    
+    .notes-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    .notes-table th,
+    .notes-table td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .notes-table th {
+        background-color: #f8f8ff;
+        font-weight: 600;
+        color: #2c3e50;
+    }
+    
+    .notes-table tr:hover {
+        background-color: #f5f5ff;
+    }
+    
+    .badge {
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 500;
+        display: inline-block;
+    }
+    
+    .badge-success {
+        background-color: #2ecc71;
+        color: white;
+    }
+    
+    /* Empty state */
+    .text-center {
+        text-align: center;
+    }
+    
+    .lead {
+        font-size: 18px;
+        margin-bottom: 0;
+    }
+    
+    /* Popup styles */
+    .popup-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        backdrop-filter: blur(3px);
+    }
+    
+    .popup-content {
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        text-align: center;
+        max-width: 400px;
+        width: 90%;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        animation: fadeIn 0.3s;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .popup-icon {
+        font-size: 50px;
+        margin-bottom: 20px;
+    }
+    
+    .popup-icon.success i {
+        color: #2ecc71;
+    }
+    
+    .popup-icon.error i {
+        color: #e74c3c;
+    }
+    
+    .popup-message {
+        margin-bottom: 20px;
+        font-size: 18px;
+        color: #2c3e50;
+    }
+    
+    .popup-button {
+        min-width: 120px;
+    }
+    
+    /* Footer styles */
+    .minimalist-footer {
+        background: linear-gradient(135deg, #574DB8 0%, #574DB8 100%);
+        color: white;
+        padding: 30px 0;
+        margin-top: 60px;
+        text-align: center;
+        border-radius: 20px 20px 0 0;
+        box-shadow: 0 -10px 30px rgba(87, 77, 184, 0.1);
+        position: relative;
+    }
+
+    .minimalist-footer::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: linear-gradient(90deg, #574DB8, #FF5757);
+    }
+
+    .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    .footer-tagline {
+        font-size: 18px;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+    }
+
+    .vit-text {
+        color: #FF5757;
+        font-weight: 700;
+    }
+
+    .tagline-text {
+        color: #e0e0e0;
+    }
+    
+    /* Mobile responsiveness */
+    @media (max-width: 768px) {
+        header {
+            padding: 15px 20px;
+        }
+        
+        .logo-text {
+            font-size: 24px;
+        }
+        
+        .action-buttons {
+            flex-direction: column;
+        }
+        
+        .card-body {
+            padding: 15px;
+        }
+        
+        .footer-tagline {
+            font-size: 16px;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .card-header-gradient h3 {
+            font-size: 16px;
+        }
+        
+        .btn {
+            padding: 10px 15px;
+        }
+    }
+</style>
+
+<script>
+    function showPopup(type, message) {
+        const icon = document.getElementById('popupIcon');
+        const messageElement = document.getElementById('popupMessage');
+        const overlay = document.getElementById('popupOverlay');
+
+        // Clear any existing content
+        icon.innerHTML = '';
+        
+        if (type === 'success') {
+            icon.innerHTML = '<i class="fas fa-check-circle"></i>';
+            icon.className = 'popup-icon success';
+        } else {
+            icon.innerHTML = '<i class="fas fa-times-circle"></i>';
+            icon.className = 'popup-icon error';
+        }
+
+        messageElement.textContent = message;
+        overlay.style.display = 'flex';
+
+        // Auto close after 3 seconds
+        setTimeout(closePopup, 3000);
+    }
+
+    function closePopup() {
+        const overlay = document.getElementById('popupOverlay');
+        if (overlay) {
+            overlay.style.display = 'none';
+        }
+    }
+
+    // Ensure this runs when the DOM is fully loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize the popup if there are any messages
+        {% if messages %}
+            {% for message in messages %}
+                showPopup('{{ message.tags }}', '{{ message|escapejs }}');
+            {% endfor %}
+        {% endif %}
+        
+        // Fix form styling
+        const inputs = document.querySelectorAll('input[type="text"], input[type="file"], textarea, select');
+        inputs.forEach(input => {
+            input.classList.add('form-control');
+        });
+        
+        // Add animation to form submission
+        const form = document.querySelector('form');
+        if (form) {
+            form.addEventListener('submit', function() {
+                const submitBtn = this.querySelector('button[type="submit"]');
+                if (submitBtn) {
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
+                    submitBtn.disabled = true;
+                }
+            });
+        }
+    });
+    
+    // Add file input change listener to show selected file name
+    document.addEventListener('DOMContentLoaded', function() {
+        const fileInput = document.querySelector('input[type="file"]');
+        if (fileInput) {
+            fileInput.classList.add('form-control');
+            fileInput.addEventListener('change', function() {
+                const fileName = this.value.split('\\').pop();
+                if (fileName) {
+                    const fileNameDisplay = document.createElement('div');
+                    fileNameDisplay.className = 'mt-2 text-primary';
+                    fileNameDisplay.innerHTML = '<i class="fas fa-file"></i> ' + fileName;
+                    
+                    // Remove any previous display
+                    const previousDisplay = this.parentElement.querySelector('.text-primary');
+                    if (previousDisplay) {
+                        previousDisplay.remove();
+                    }
+                    
+                    this.parentElement.appendChild(fileNameDisplay);
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

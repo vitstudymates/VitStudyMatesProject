@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ experience.company.name }} - {{ experience.job_role }} | VIT Bhopal Notes</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <style>
+        :root {
+            --primary: #7558C6;
+            --secondary: #8668D3;
+            --accent: #6A4CB8;
+            --accent-rgb: 106, 76, 184;
+            --light: #ffffff;
+            --dark: #343a40;
+            --orange: #FF5757;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: #2a2a3a;
+        }
+
+        /* Header styles from first document */
+        header {
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(224, 224, 224, 0.5);
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .logo-text {
+            font-weight: 700;
+            font-size: 28px;
+        }
+
+        .logo-text a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .logo-text span:first-child {
+            color: #574DB8;
+        }
+
+        .logo-text span:last-child {
+            color: #FF5757;
+        }
+
+        .header-btn {
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-btn {
+            background: #FF5757;
+            box-shadow: 0 4px 12px rgba(255, 87, 87, 0.2);
+        }
+
+        .back-btn:hover {
+            background: #ff3c3c;
+            box-shadow: 0 6px 15px rgba(255, 87, 87, 0.3);
+            transform: translateY(-3px);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            flex: 1;
+        }
+
+        .experience-content {
+            background: #ffffff;
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            border: 1px solid #7558C6;
+            overflow: hidden;
+            margin-bottom: 30px;
+            color: #333;
+            animation: fadeIn 0.5s ease;
+            box-shadow: 0 5px 15px rgba(117, 88, 198, 0.2);
+        }
+
+        .experience-header {
+            padding: 25px;
+            background: #7558C6;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            color: white;
+        }
+
+        .company-logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 15px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .company-logo img {
+            width: 80%;
+            height: 80%;
+            object-fit: contain;
+        }
+
+        .company-info h2 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .company-info p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .status-tags {
+            margin-top: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 5px 15px;
+            background: #8668D3;
+            color: white;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .success-tag {
+            background: #28a745;
+        }
+
+        .experience-body {
+            padding: 30px;
+        }
+
+        .experience-section {
+            margin-bottom: 30px;
+        }
+
+        .experience-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            color: #7558C6;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-content {
+            background: rgba(117, 88, 198, 0.05);
+            border-radius: 10px;
+            padding: 20px;
+            line-height: 1.6;
+            border: 1px solid rgba(117, 88, 198, 0.1);
+        }
+
+        .user-info {
+            margin-top: 30px;
+            text-align: right;
+            font-style: italic;
+            opacity: 0.8;
+            color: #555;
+        }
+
+        .comments-section {
+            background: #ffffff;
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            border: 1px solid #7558C6;
+            padding: 30px;
+            color: #333;
+            box-shadow: 0 5px 15px rgba(117, 88, 198, 0.2);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-header h2 {
+            font-size: 1.5rem;
+            color: #7558C6;
+        }
+
+        .comment {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(117, 88, 198, 0.2);
+        }
+
+        .comment:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .comment-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #7558C6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .comment-user-info {
+            flex: 1;
+        }
+
+        .comment-user-info h4 {
+            font-size: 1rem;
+            margin-bottom: 3px;
+            color: #7558C6;
+        }
+
+        .timestamp {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .comment-text {
+            margin-left: 50px;
+        }
+
+        .comment-form {
+            margin-top: 30px;
+        }
+
+        .comment-form textarea {
+            width: 100%;
+            padding: 15px;
+            background: rgba(117, 88, 198, 0.05);
+            border: 1px solid rgba(117, 88, 198, 0.3);
+            border-radius: 10px;
+            color: #333;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            padding: 10px 25px;
+            background: #7558C6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background: #6A4CB8;
+            transform: translateY(-2px);
+        }
+
+        /* Add footer styles */
+        .minimalist-footer {
+            background: linear-gradient(135deg, #574DB8 0%, #574DB8 100%);
+            color: white;
+            padding: 30px 0;
+            margin-top: auto;
+            text-align: center;
+            border-radius: 20px 20px 0 0;
+            box-shadow: 0 -10px 30px rgba(87, 77, 184, 0.1);
+            position: relative;
+            margin-bottom: 0;
+        }
+
+        .minimalist-footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #574DB8, #FF5757);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .footer-tagline {
+            font-size: 18px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .vit-text {
+            color: #FF5757;
+            font-weight: 700;
+        }
+
+        .tagline-text {
+            color: #e0e0e0;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .experience-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .company-info {
+                text-align: center;
+            }
+            
+            .status-tags {
+                justify-content: center;
+            }
+            
+            header {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .footer-tagline {
+                font-size: 16px;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <!-- New header from first document -->
+    <header>
+        <div class="logo">
+            <div class="logo-text">
+                <a href="{% url 'index' %}">
+                    <span>VIT</span><span>StudyMates</span>
+                </a>
+            </div>
+        </div>
+        
+        <div class="profile-section">
+            <a href="{% url 'placement_dashboard' %}" class="header-btn back-btn">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="experience-content">
+            <div class="experience-header">
+                <div class="company-logo">
+                    {% if experience.company.logo %}
+                        <img src="{{ experience.company.logo.url }}" alt="{{ experience.company.name }}">
+                    {% else %}
+                        <i class="fas fa-building" style="font-size: 40px; color: #7558C6;"></i>
+                    {% endif %}
+                </div>
+                <div class="company-info">
+                    <h2>{{ experience.company.name }}</h2>
+                    <p>{{ experience.job_role }}</p>
+                    <div class="status-tags">
+                        <span class="tag">{{ experience.interview_date }}</span>
+                        {% if experience.got_selected %}
+                            <span class="tag success-tag">Selected</span>
+                        {% else %}
+                            <span class="tag">Not Selected</span>
+                        {% endif %}
+                        {% if experience.package_offered %}
+                            <span class="tag">{{ experience.package_offered }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="experience-body">
+                <div class="experience-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-clipboard-list"></i> Interview Rounds
+                    </h3>
+                    <div class="section-content">
+                        {{ experience.rounds_description|linebreaks }}
+                    </div>
+                </div>
+
+                {% if experience.technical_questions %}
+                <div class="experience-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-laptop-code"></i> Technical Questions
+                    </h3>
+                    <div class="section-content">
+                        {{ experience.technical_questions|linebreaks }}
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if experience.hr_questions %}
+                <div class="experience-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-user-tie"></i> HR Questions
+                    </h3>
+                    <div class="section-content">
+                        {{ experience.hr_questions|linebreaks }}
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="experience-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-chess"></i> Preparation Strategy
+                    </h3>
+                    <div class="section-content">
+                        {{ experience.preparation_strategy|linebreaks }}
+                    </div>
+                </div>
+
+                <div class="experience-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-book"></i> Resources Used
+                    </h3>
+                    <div class="section-content">
+                        {{ experience.resources_used|linebreaks }}
+                    </div>
+                </div>
+
+                <div class="experience-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-lightbulb"></i> Tips for Juniors
+                    </h3>
+                    <div class="section-content">
+                        {{ experience.tips_for_juniors|linebreaks }}
+                    </div>
+                </div>
+
+                <div class="user-info">
+                    Shared by {{ experience.user.username }} on {{ experience.created_at|date:"F j, Y" }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer from first document -->
+    <footer class="minimalist-footer">
+        <div class="footer-content">
+            <p class="footer-tagline"><span class="vit-text">VITStudyMates</span> - <span class="tagline-text">Everything a VITian Needs</span></p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Form validation
+            const commentForm = document.querySelector('.comment-form form');
+            if (commentForm) {
+                commentForm.addEventListener('submit', (e) => {
+                    const textarea = commentForm.querySelector('textarea');
+                    if (!textarea.value.trim()) {
+                        e.preventDefault();
+                        textarea.style.borderColor = '#7558C6';
+                    }
+                });
+            }
+
+            // Company logo error handling
+            const companyLogo = document.querySelector('.company-logo img');
+            if (companyLogo) {
+                companyLogo.addEventListener('error', () => {
+                    companyLogo.style.display = 'none';
+                    const icon = document.createElement('i');
+                    icon.className = 'fas fa-building';
+                    icon.style.fontSize = '40px';
+                    icon.style.color = '#7558C6';
+                    companyLogo.parentNode.appendChild(icon);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

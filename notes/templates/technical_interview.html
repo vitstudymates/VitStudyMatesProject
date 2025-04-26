@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technical Interview Prep - Placement Guidance</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #6c5ce7;
+            --secondary-color: #ff6b6b;
+            --accent-color: #00cec9;
+            --text-color: #2d3436;
+            --bg-color: #f9f9f9;
+            --card-bg: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), #a55eea);
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            color: #eee;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .main-content {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        h2 {
+            margin-top: 50px;
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            text-align: center;
+        }
+
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .resource-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .resource-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
+        }
+
+        .resource-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .resource-card h3 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .resource-card p {
+            color: #636e72;
+            margin-bottom: 20px;
+        }
+
+        .resource-link {
+            display: inline-block;
+            padding: 10px 20px;
+            background: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .resource-link:hover {
+            background: #5b4bc4;
+            transform: scale(1.05);
+        }
+
+        .roadmap-section {
+            margin-top: 60px;
+            padding: 30px;
+            background: linear-gradient(135deg, #fd79a8, #e84393);
+            border-radius: 15px;
+            color: white;
+        }
+
+        .roadmap-section h2 {
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            text-align: center;
+        }
+
+        .roadmap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .roadmap-step {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            flex: 1;
+            min-width: 200px;
+            max-width: 220px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .roadmap-step:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        .roadmap-step i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: var(--accent-color);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .back-button {
+                position: static;
+                margin-bottom: 20px;
+            }
+
+            .roadmap {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="{% url 'placement_dashboard' %}" class="back-button">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+        <h1>Technical Interview Prep</h1>
+        <p>Master coding problems and ace technical interviews</p>
+    </header>
+
+    <main class="main-content">
+        <h2>Core CS Subjects</h2>
+        <div class="resources-grid">
+            {% for resource in core_subjects %}
+            <div class="resource-card">
+                <h3>{{ resource.name }}</h3>
+                <p>{{ resource.description }}</p>
+                <a href="{{ resource.url }}" class="resource-link" target="_blank">
+                    Explore Resource <i class="fas fa-external-link-alt"></i>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+
+        <h2>DSA Sheets & Practice</h2>
+        <div class="resources-grid">
+            {% for resource in dsa_sheets %}
+            <div class="resource-card">
+                <h3>{{ resource.name }}</h3>
+                <p>{{ resource.description }}</p>
+                <a href="{{ resource.url }}" class="resource-link" target="_blank">
+                    Explore Resource <i class="fas fa-external-link-alt"></i>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="roadmap-section">
+            <h2>Technical Interview Roadmap</h2>
+            <div class="roadmap">
+                <div class="roadmap-step">
+                    <i class="fas fa-laptop-code"></i>
+                    <h3>Step 1</h3>
+                    <p>Master Data Structures & Algorithms</p>
+                </div>
+                <div class="roadmap-step">
+                    <i class="fas fa-tasks"></i>
+                    <h3>Step 2</h3>
+                    <p>Solve Practice Problems Daily</p>
+                </div>
+                <div class="roadmap-step">
+                    <i class="fas fa-clock"></i>
+                    <h3>Step 3</h3>
+                    <p>Time-bounded Problem Solving</p>
+                </div>
+                <div class="roadmap-step">
+                    <i class="fas fa-users"></i>
+                    <h3>Step 4</h3>
+                    <p>Mock Interviews with Peers</p>
+                </div>
+                <div class="roadmap-step">
+                    <i class="fas fa-lightbulb"></i>
+                    <h3>Step 5</h3>
+                    <p>Learn System Design Concepts</p>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

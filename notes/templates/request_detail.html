@@ -1,0 +1,468 @@
+
+{% load static %}
+
+{% block title %}{{ note_request.title }}{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="breadcrumb">
+        <a href="{% url 'view_all_requests' %}"><i class="fas fa-chevron-left"></i> Back to All Requests</a>
+    </div>
+    
+    <div class="request-detail-container">
+        <div class="request-header">
+            <div class="header-content">
+                <div class="header-top">
+                    <h1 class="request-title">{{ note_request.title }}</h1>
+                    <span class="request-status status-{{ note_request.status }}">{{ note_request.status|title }}</span>
+                </div>
+                
+                <div class="request-meta">
+                    <div class="meta-item">
+                        <i class="fas fa-user"></i>
+                        <span>Requested by: {{ note_request.requested_by.get_full_name|default:note_request.requested_by.username }}</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-calendar"></i>
+                        <span>Posted: {{ note_request.date_created|date:"M d, Y" }}</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-book"></i>
+                        <span>Subject: {{ note_request.subject }}</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-university"></i>
+                        <span>Course: {{ note_request.course }}</span>
+                    </div>
+                    {% if note_request.semester %}
+                        <div class="meta-item">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>Semester: {{ note_request.semester }}</span>
+                        </div>
+                    {% endif %}
+                    {% if note_request.deadline %}
+                        <div class="meta-item">
+                            <i class="fas fa-clock"></i>
+                            <span>Needed by: {{ note_request.deadline|date:"M d, Y" }}</span>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            {% if request.user == note_request.requested_by %}
+                <div class="status-controls">
+                    <form method="post" action="{% url 'update_request_status' request_id=note_request.id %}">
+                        {% csrf_token %}
+                        <div class="status-select-group">
+                            <label for="statusSelect">Update Status:</label>
+                            <select name="status" id="statusSelect" class="status-select">
+                                <option value="open" {% if note_request.status == 'open' %}selected{% endif %}>Open</option>
+                                <option value="fulfilled" {% if note_request.status == 'fulfilled' %}selected{% endif %}>Fulfilled</option>
+                                <option value="closed" {% if note_request.status == 'closed' %}selected{% endif %}>Closed</option>
+                            </select>
+                            <button type="submit" class="status-update-btn">Update</button>
+                        </div>
+                    </form>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="request-description-container">
+            <h3 class="section-title">Description</h3>
+            <div class="request-description">
+                {{ note_request.description|linebreaks }}
+            </div>
+        </div>
+        
+        <div class="responses-container">
+            <h3 class="section-title">
+                <i class="fas fa-comments"></i> Responses ({{ responses.count }})
+            </h3>
+            
+            {% if responses %}
+                <div class="responses-list">
+                    {% for response in responses %}
+                        <div class="response-card">
+                            <div class="response-header">
+                                <div class="response-user">
+                                    <div class="user-avatar small">
+                                        {% if response.responder.profile.photo %}
+                                            <img src="{{ response.responder.profile.photo.url }}" alt="Profile Photo">
+                                        {% else %}
+                                            <img src="{% static 'images/default-profile.png' %}" alt="Default Profile">
+                                        {% endif %}
+                                    </div>
+                                    <div class="user-info">
+                                        <h4>{{ response.responder.get_full_name|default:response.responder.username }}</h4>
+                                        <span class="response-date">{{ response.date_created|date:"M d, Y H:i" }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="response-content">
+                                {{ response.message|linebreaks }}
+                                
+                                {% if response.attachment %}
+                                    <div class="response-attachment">
+                                        <a href="{{ response.attachment.url }}" class="attachment-link" download>
+                                            <i class="fas fa-file-download"></i> Download Attachment
+                                        </a>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="no-responses">
+                    <i class="fas fa-comment-slash fa-3x"></i>
+                    <p>No responses yet. Be the first to respond!</p>
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="response-form-container">
+            <h3 class="section-title">Add Your Response</h3>
+            
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="{{ form.message.id_for_label }}">Your Response</label>
+                    {{ form.message }}
+                    {% if form.message.errors %}
+                        <div class="text-danger">{{ form.message.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.attachment.id_for_label }}">Attachment (optional)</label>
+                    {{ form.attachment }}
+                    {% if form.attachment.errors %}
+                        <div class="text-danger">{{ form.attachment.errors }}</div>
+                    {% endif %}
+                    <small class="form-text text-muted">Upload your notes, images, or other relevant files.</small>
+                </div>
+                
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i> Submit Response
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .breadcrumb {
+        margin-bottom: 20px;
+    }
+    
+    .breadcrumb a {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 500;
+        transition: var(--transition);
+    }
+    
+    .breadcrumb a:hover {
+        color: var(--secondary);
+    }
+    
+    .breadcrumb i {
+        margin-right: 5px;
+    }
+    
+    .request-detail-container {
+        background: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        overflow: hidden;
+        margin-bottom: 30px;
+    }
+    
+    .request-header {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        color: white;
+        padding: 25px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+    
+    .header-content {
+        flex: 1;
+    }
+    
+    .header-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+    
+    .request-title {
+        margin: 0;
+        font-size: 1.8rem;
+        font-weight: 700;
+    }
+    
+    .request-status {
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+    
+    .status-open {
+        background-color: #ebf8ff;
+        color: #2b6cb0;
+    }
+    
+    .status-fulfilled {
+        background-color: #c6f6d5;
+        color: #276749;
+    }
+    
+    .status-closed {
+        background-color: #fed7d7;
+        color: #9b2c2c;
+    }
+    
+    .request-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    
+    .meta-item {
+        display: flex;
+        align-items: center;
+        font-size: 0.9rem;
+    }
+    
+    .meta-item i {
+        margin-right: 5px;
+    }
+    
+    .status-controls {
+        min-width: 200px;
+    }
+    
+    .status-select-group {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 15px;
+    }
+    
+    .status-select-group label {
+        display: block;
+        margin-bottom: 10px;
+        font-weight: 500;
+    }
+    
+    .status-select {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 5px;
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        margin-bottom: 10px;
+    }
+    
+    .status-select option {
+        background: white;
+        color: #333;
+    }
+    
+    .status-update-btn {
+        width: 100%;
+        padding: 8px;
+        border: none;
+        border-radius: 5px;
+        background: white;
+        color: var(--primary);
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+    
+    .status-update-btn:hover {
+        background: #f8f9fa;
+        transform: translateY(-2px);
+    }
+    
+    .request-description-container {
+        padding: 25px;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .section-title {
+        margin-bottom: 15px;
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: var(--dark);
+    }
+    
+    .request-description {
+        line-height: 1.7;
+        color: #4a5568;
+    }
+    
+    .responses-container {
+        padding: 25px;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .responses-list {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .response-card {
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    
+    .response-header {
+        padding: 15px;
+        background: #f8f9fa;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .response-user {
+        display: flex;
+        align-items: center;
+    }
+    
+    .user-avatar.small {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        overflow: hidden;
+        margin-right: 12px;
+        border: 2px solid white;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    
+    .user-avatar.small img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .user-info h4 {
+        margin: 0 0 3px 0;
+        font-size: 1rem;
+    }
+    
+    .response-date {
+        font-size: 0.8rem;
+        color: #718096;
+    }
+    
+    .response-content {
+        padding: 15px;
+        line-height: 1.6;
+    }
+    
+    .response-attachment {
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid #e2e8f0;
+    }
+    
+    .attachment-link {
+        display: inline-flex;
+        align-items: center;
+        color: var(--primary);
+        text-decoration: none;
+        padding: 8px 15px;
+        border: 1px solid var(--primary);
+        border-radius: 5px;
+        transition: var(--transition);
+    }
+    
+    .attachment-link i {
+        margin-right: 5px;
+    }
+    
+    .attachment-link:hover {
+        background: var(--primary);
+        color: white;
+    }
+    
+    .no-responses {
+        text-align: center;
+        padding: 30px 0;
+    }
+    
+    .no-responses i {
+        color: #cbd5e0;
+        margin-bottom: 15px;
+    }
+    
+    .no-responses p {
+        color: #718096;
+    }
+    
+    .response-form-container {
+        padding: 25px;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: var(--dark);
+    }
+    
+    .form-group textarea {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #e2e8f0;
+        border-radius: var(--border-radius);
+        font-size: 1rem;
+        resize: vertical;
+        min-height: 120px;
+    }
+    
+    .form-group textarea:focus {
+        border-color: var(--primary);
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+    }
+    
+    .form-text.text-muted {
+        font-size: 0.85rem;
+        color: #718096;
+        margin-top: 5px;
+    }
+    
+    @media (max-width: 768px) {
+        .request-header {
+            flex-direction: column;
+        }
+        
+        .header-top {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .request-meta {
+            flex-direction: column;
+            gap: 10px;
+        }
+    }
+</style>
+{% endblock %}
