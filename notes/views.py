@@ -30,10 +30,18 @@ def upload_notes(request):
         if form.is_valid():
             note = form.save(commit=False)
             note.user = request.user
-            # Status will automatically be set to 'approved' from the model's default
             note.save()
-            messages.success(request, 'Your notes have been successfully uploaded!')
-            return redirect('upload_notes')  # Redirect to same page or another page
+            
+            # Award points to the user for uploading notes
+            try:
+                profile = request.user.profile
+                profile.points += 10  # Award 10 points for uploading notes
+                profile.save()
+                messages.success(request, 'Your notes have been successfully uploaded! You earned 10 points.')
+            except:
+                messages.success(request, 'Your notes have been successfully uploaded!')
+                
+            return redirect('upload_notes')
     else:
         form = NotesForm()
     
@@ -46,7 +54,6 @@ def upload_notes(request):
     }
     
     return render(request, 'upload_notes.html', context)
-
 
 
 
@@ -555,6 +562,15 @@ def add_placement_experience(request):
             tips_for_juniors=tips_for_juniors
         )
         
+        # Award points to the user for sharing placement experience
+        try:
+            profile = request.user.profile
+            profile.points += 15  # Award 15 points for sharing a placement experience
+            profile.save()
+            messages.success(request, 'Your placement experience has been shared! You earned 15 points.')
+        except:
+            pass
+            
         return redirect('placement_experience_detail', experience_id=experience.id)
     
     return redirect('placement_dashboard')
@@ -809,7 +825,14 @@ def add_reply(request, pk):
                 note_file = NoteFile(reply=reply, file=f)
                 note_file.save()
             
-            messages.success(request, 'Your reply has been posted!')
+            # Award points for providing a helpful reply
+            try:
+                profile = request.user.profile
+                profile.points += 5  # Award 5 points for replying to a note request
+                profile.save()
+                messages.success(request, 'Your reply has been posted! You earned 5 points.')
+            except:
+                messages.success(request, 'Your reply has been posted!')
     
     return redirect('note_request_detail', pk=pk)
 
@@ -1048,17 +1071,25 @@ def semester_dashboard(request):
             paper.year = 2025
             paper.semester = 'FALL'
             paper.save()
-
-            messages.success(request, "Paper uploaded successfully!")
+            
+            # Award points to the user for uploading semester paper
+            try:
+                profile = request.user.profile
+                profile.points += 20  # Award 20 points for uploading a semester paper
+                profile.save()
+                messages.success(request, "Paper uploaded successfully! You earned 20 points.")
+            except:
+                messages.success(request, "Paper uploaded successfully!")
+                
             return redirect('semester_dashboard')
     else:
         upload_form = PaperUploadForm()
 
+    # Rest of your view remains the same
     course_search = request.GET.get('course_search', '').strip()
     papers = SemesterPaper.objects.all().order_by('-upload_date')
 
     if course_search:
-        # Use exact match for course code, partial for title
         papers = papers.filter(
             Q(course__code__iexact=course_search) | 
             Q(course__title__icontains=course_search)
